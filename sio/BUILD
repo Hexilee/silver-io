@@ -1,6 +1,6 @@
 cc_library(
     name = "sio",
-    srcs = ["sio.cpp", "libuv_a.a"],
+    srcs = ["sio.cpp"],
     hdrs = ["sio.hpp"],
     deps = [
         "//future:future",

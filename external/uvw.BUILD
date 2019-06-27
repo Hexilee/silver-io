@@ -3,8 +3,13 @@ cc_library(
     deps = [
         "@libuv//:uv"
     ],
-    includes = glob([
+    hdrs = glob([
         "src/*.hpp",
+        "src/uvw/*.hpp",
     ]),
+    includes = [
+        "src",
+        "src/uvw",
+    ],
     visibility = ["//visibility:public"],
 )

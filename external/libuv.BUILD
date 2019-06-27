@@ -12,8 +12,12 @@ cc_library(
     name = "uv",
     srcs = ["build/libuv_a.a"],
     hdrs = glob([
-        "include/*.hpp",
-        "include/uv/*.hpp",
+        "include/*.h",
+        "include/uv/*.h",
     ]),
-    visibility = ["@uvw//:__pkg__"],
+    includes = [
+        "include",
+        "include/uv",
+    ],
+    visibility = ["//visibility:public"],
 )

@@ -4,5 +4,9 @@
 
 #ifndef SILVER_IO_SIO_HPP
 #define SILVER_IO_SIO_HPP
-#include "uvw.h"
+#include "uvw.hpp"
+#include <memory>
+
+void listen(uvw::Loop &loop);
+
 #endif //SILVER_IO_SIO_HPP
