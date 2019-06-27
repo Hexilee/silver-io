@@ -11,5 +11,6 @@ cc_library(
         "src",
         "src/uvw",
     ],
+
     visibility = ["//visibility:public"],
 )
