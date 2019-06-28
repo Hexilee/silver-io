@@ -7,6 +7,7 @@
 #include <functional>
 #include <memory>
 #include "context.hpp"
+#include "blockingconcurrentqueue.h"
 namespace future {
     using std::shared_ptr;
     template<class Output>

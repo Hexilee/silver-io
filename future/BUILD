@@ -9,5 +9,8 @@ cc_library(
     includes = [
         ".",
     ],
+    deps = [
+        "@concurrentqueue//:concurrentqueue",
+    ],
     visibility = ["//visibility:public"],
 )
