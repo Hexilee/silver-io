@@ -8,8 +8,8 @@ cc_library(
         "src/uvw/*.hpp",
     ]),
     includes = [
-        "src",
-        "src/uvw",
+        "src/",
+        "src/uvw/",
     ],
 
     visibility = ["//visibility:public"],

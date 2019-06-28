@@ -4,6 +4,8 @@
 
 #include "future.hpp"
 
+using namespace future;
+
 template<class Output>
 auto Poll<Output>::pending() -> Poll {
     Poll poll;
@@ -19,4 +21,10 @@ auto Poll<Output>::is_complete() -> bool {
 template<class Output>
 auto Poll<Output>::get() -> Output {
     return value;
+}
+
+FuncContext::FuncContext(std::function<auto() -> void> waker) : waker(waker) {}
+
+auto FuncContext::wake() -> void {
+    waker();
 }
