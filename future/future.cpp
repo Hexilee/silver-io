@@ -5,6 +5,7 @@
 #include "future.hpp"
 
 using namespace future;
+using future::ThreadLocalContext;
 
 template<class Output>
 auto Poll<Output>::pending() -> Poll {
@@ -23,8 +24,7 @@ auto Poll<Output>::get() -> Output {
     return value;
 }
 
-FuncContext::FuncContext(std::function<auto() -> void> waker) : waker(waker) {}
-
-auto FuncContext::wake() -> void {
-    waker();
+template<class Output>
+auto Future<Output>::wait() -> Output {
+    poll(ThreadLocalContext);
 }

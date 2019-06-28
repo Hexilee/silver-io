@@ -12,3 +12,10 @@ new_git_repository(
     remote = "https://github.com/libuv/libuv.git",
     tag = "v1.29.1",
 )
+
+new_git_repository(
+    name = "concurrentqueue",
+    build_file = "concurrentqueue.BUILD",
+    remote = "https://github.com/cameron314/concurrentqueue.git",
+    tag = "v1.0.0-beta",
+)

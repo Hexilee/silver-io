@@ -5,7 +5,10 @@
 #ifndef SILVER_IO_FUTURE_HPP
 #define SILVER_IO_FUTURE_HPP
 #include <functional>
+#include <memory>
+#include "context.hpp"
 namespace future {
+    using std::shared_ptr;
     template<class Output>
     class Poll {
         Output value;
@@ -17,22 +20,12 @@ namespace future {
         auto get() -> Output;
     };
     
-    class Context {
-      public:
-        virtual auto wake() -> void;
-    };
-    
-    class FuncContext: public Context {
-        std::function<auto() -> void> waker;
-      public:
-        FuncContext(std::function<auto() -> void> waker);
-        auto wake() -> void override;
-    };
     
     template<class Output>
     class Future {
       public:
-        virtual auto poll(const Context &ctx) -> Poll<Output>;
+        auto wait() -> Output;
+        virtual auto poll(const shared_ptr<Context> ctx) -> Poll<Output>;
     };
 }
 #endif //SILVER_IO_FUTURE_HPP

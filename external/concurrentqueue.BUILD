@@ -1,13 +1,11 @@
 cc_library(
-    name = "future",
-    srcs = glob([
-        "*.cpp",
-    ]),
+    name = "concurrentqueue",
     hdrs = glob([
-        "*.hpp",
+        "*.h",
     ]),
     includes = [
         ".",
     ],
+
     visibility = ["//visibility:public"],
 )
