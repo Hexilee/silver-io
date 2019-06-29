@@ -12,7 +12,7 @@ auto FuncContext::wake() -> void {
     waker();
 }
 
-auto ThreadLocalContext = make_shared<FuncContext>([]() {
+thread_local shared_ptr<Context> future::ThreadLocalContext = make_shared<FuncContext>([]() {
     // do nothing
 });
 
