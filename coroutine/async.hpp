@@ -4,8 +4,8 @@
 
 #ifndef SILVER_IO_ASYNC_HPP
 #define SILVER_IO_ASYNC_HPP
-#include <__errc>
-
-auto a = EADDRINUSE;
-
+#include <thread>
+namespace coroutine {
+    using std::thread;
+}
 #endif //SILVER_IO_ASYNC_HPP

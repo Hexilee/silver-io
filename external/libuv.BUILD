@@ -16,8 +16,7 @@ cc_library(
         "include/uv/*.h",
     ]),
     includes = [
-        "include",
-        "include/uv",
+        "include/",
     ],
     visibility = ["//visibility:public"],
 )

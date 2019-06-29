@@ -5,7 +5,6 @@
 #ifndef SILVER_IO_EXEC_HPP
 #define SILVER_IO_EXEC_HPP
 #include "sio/sio.hpp"
-#include "future/future.hpp"
 namespace sio::executor {
     using namespace sio;
     using namespace future;
