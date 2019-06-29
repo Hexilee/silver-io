@@ -9,5 +9,8 @@ cc_library(
     includes = [
         ".",
     ],
+    deps = [
+        "//future:future",
+    ],
     visibility = ["//visibility:public"],
 )
