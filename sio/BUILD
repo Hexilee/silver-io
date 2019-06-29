@@ -2,15 +2,15 @@ cc_library(
     name = "sio",
     srcs = glob([
         "*.cpp",
-        "thread_local/*.cpp",
+        "executor/*.cpp",
     ]),
     hdrs = glob([
         "*.hpp",
-        "thread_local/*.hpp",
+        "executor/*.hpp",
     ]),
     includes = [
         ".",
-        "thread_local",
+        "executor/*.hpp",
     ],
     deps = [
         "//future:future",
