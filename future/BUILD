@@ -12,5 +12,8 @@ cc_library(
     deps = [
         "@concurrentqueue//:concurrentqueue",
     ],
+    copts = [
+        "-std=c++17"
+    ],
     visibility = ["//visibility:public"],
 )

@@ -8,32 +8,32 @@ using namespace sio::future;
 using sio::future::ThreadLocalContext;
 using moodycamel::BlockingConcurrentQueue;
 
-template<class Output>
-auto Poll<Output>::pending() -> Poll {
+template<class T>
+auto Poll<T>::pending() -> Poll {
     Poll poll;
     poll.complete = false;
     return poll;
 }
 
-template<class Output>
-auto Poll<Output>::is_complete() -> bool {
+template<class T>
+auto Poll<T>::is_complete() -> bool {
     return complete;
 }
 
-template<class Output>
-auto Poll<Output>::get() -> Output {
+template<class T>
+auto Poll<T>::get() -> Output {
     return value;
 }
 
 
-template<class Output>
-auto Future<Output>::wait() -> Output {
+template<class T>
+auto Future<T>::wait() -> T {
     class Signal;
     BlockingConcurrentQueue<Signal> channel;
     ThreadLocalContext = make_shared<FuncContext>([&channel]() {
         channel.enqueue(Signal());
     });
-    auto poll_result = Poll<Output>::pending();
+    auto poll_result = Poll<T>::pending();
     Signal signal;
     while (!poll_result.is_complete()) {
         channel.wait_dequeue(&signal);
