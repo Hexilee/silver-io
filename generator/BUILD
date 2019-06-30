@@ -16,6 +16,7 @@ cc_library(
         "-std=c++17"
     ],
     linkstatic = 1,
+    visibility = ["//visibility:public"],
 )
 
 cc_binary(

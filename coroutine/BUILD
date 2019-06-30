@@ -12,15 +12,24 @@ cc_library(
     deps = [
         "//future:future",
     ],
+    copts = [
+        "-std=c++17"
+    ],
     visibility = ["//visibility:public"],
 )
 
-#cc_binary(
-#    name = "fibonacci",
-#    srcs = glob([
-#        "example/fibonacci.*",
-#    ]),
-#    includes = [
-#        "example/",
-#    ],
-#)
+cc_binary(
+    name = "fibonacci",
+    srcs = glob([
+        "example/fibonacci.*",
+    ]),
+    includes = [
+        "example/",
+    ],
+    copts = [
+        "-std=c++17"
+    ],
+    deps = [
+        "//generator:generator"
+    ]
+)
