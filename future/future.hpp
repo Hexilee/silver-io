@@ -8,7 +8,7 @@
 #include <memory>
 #include "context.hpp"
 #include "blockingconcurrentqueue.h"
-namespace future {
+namespace sio::future {
     using std::shared_ptr;
     template<class Output>
     class Poll {

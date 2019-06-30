@@ -14,3 +14,13 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
 )
+
+#cc_binary(
+#    name = "fibonacci",
+#    srcs = glob([
+#        "example/fibonacci.*",
+#    ]),
+#    includes = [
+#        "example/",
+#    ],
+#)

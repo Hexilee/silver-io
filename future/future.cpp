@@ -4,8 +4,8 @@
 
 #include "future.hpp"
 
-using namespace future;
-using future::ThreadLocalContext;
+using namespace sio::future;
+using sio::future::ThreadLocalContext;
 using moodycamel::BlockingConcurrentQueue;
 
 template<class Output>

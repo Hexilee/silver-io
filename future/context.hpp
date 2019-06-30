@@ -8,8 +8,7 @@
 #include <exception>
 #include <functional>
 
-namespace future {
-    using namespace future;
+namespace sio::future {
     using std::shared_ptr;
     using std::make_shared;
     
