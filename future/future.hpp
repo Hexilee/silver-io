@@ -8,18 +8,22 @@
 #include <memory>
 #include "context.hpp"
 #include "blockingconcurrentqueue.h"
+
 namespace sio::future {
     using std::shared_ptr;
+    
     template<typename T>
     class Poll {
-        using Output = T;
-        Output value;
+        const T &value;
         bool complete;
       public:
-        explicit Poll(const Output value) : value(value), complete(true) {};
+        using Output = T;
+        
+        explicit Poll(const Output &value) : value(value), complete(true) {};
+        auto operator=(Poll &&other) noexcept -> Poll &;
         static auto pending() -> Poll;
         auto is_complete() -> bool;
-        auto get() -> const Output&;
+        auto get() -> const Output &;
     };
     
     
@@ -34,7 +38,8 @@ namespace sio::future {
     class FutureOk: public Future<T> {
         T value;
       public:
-        FutureOk(T value);
+        FutureOk(const T &value);
+        FutureOk(T &&value);
         auto poll(shared_ptr<Context> ctx) -> Poll<T> override;
     };
 }

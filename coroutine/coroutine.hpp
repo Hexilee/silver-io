@@ -12,12 +12,12 @@ namespace sio::coroutine {
         Hup
     };
     
-    template <typename T>
+    template<typename T>
     class Coroutine: public Generator<Context, T> {
         using Gen = Generator<Context, T>;
       public:
-        static auto yield();
-        static auto done(T value);
+        static auto yield() -> void;
+        static auto done(T value) -> void;
     };
 }
 #endif //SILVER_IO_COROUTINE_HPP

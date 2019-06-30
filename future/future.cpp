@@ -25,6 +25,12 @@ auto Poll<T>::get() -> const Output& {
     return value;
 }
 
+template<typename T>
+auto Poll<T>::operator=(Poll &&other) noexcept -> Poll & {
+    value = other.value;
+    complete = other.complete;
+    return *this;
+}
 
 template<typename T>
 auto Future<T>::wait() -> T {
@@ -43,10 +49,13 @@ auto Future<T>::wait() -> T {
 }
 
 template<typename T>
-auto FutureOk<T>::poll(shared_ptr<Context> ctx) -> Poll<T> {
+auto FutureOk<T>::poll(shared_ptr<Context> _ctx) -> Poll<T> {
     return Poll(value);
 }
 
 template<typename T>
-FutureOk<T>::FutureOk(T value):value(value) {}
+FutureOk<T>::FutureOk(T&& value):value(value) {}
+
+template<typename T>
+FutureOk<T>::FutureOk(const T& value):value(value) {}
 
