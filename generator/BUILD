@@ -20,11 +20,18 @@ cc_binary(
     srcs = glob([
         "example/boost_coroutine.*",
     ]),
-    includes = [
-        "example/",
-    ],
     linkopts = [
         "-lboost_coroutine"
     ],
-    linkstatic = 1,
 )
+
+cc_binary(
+    name = "fib",
+    srcs = glob([
+        "example/fib.*",
+    ]),
+    deps = [
+        "generator"
+    ],
+)
+

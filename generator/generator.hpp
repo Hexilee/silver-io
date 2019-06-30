@@ -17,20 +17,23 @@ namespace sio::generator {
     class Generator {
         using Yield = typename boost_coroutine<Y>::push_type;
         using Resume = typename boost_coroutine<Y>::pull_type;
-        Yield* _yield;
-        Resume* _resume;
+        Yield *_yield;
+        Resume *_resume;
         R _result;
-      public:
-        Generator(std::function<auto() -> void>&& fn);
-        ~Generator();
-        static thread_local Generator<Y, R>* this_generator;
         auto set_this_generator() -> void;
-        auto resume() -> const Y&;
+      public:
+        explicit Generator(std::function<auto() -> void> &&fn);
+        ~Generator();
+        static thread_local Generator<Y, R> *this_generator;
+        auto resume() -> const Y &;
         auto yield(Y value) -> void;
         auto yield() -> void;
-        auto complete(R ret) -> void;
+        auto done(R ret) -> void;
         auto is_complete() -> bool;
-        auto result() -> const R&;
+        auto result() -> const R &;
     };
+    
+    template<typename Y, typename R>
+    thread_local Generator<Y, R> *Generator<Y, R>::this_generator = nullptr;
 }
 #endif //SILVER_IO_GENERATOR_HPP

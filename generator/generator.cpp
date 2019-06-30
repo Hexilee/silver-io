@@ -44,13 +44,13 @@ auto Generator<Y, R>::yield() -> void {
 }
 
 template<typename Y, typename R>
-auto Generator<Y, R>::complete(R ret) -> void {
+auto Generator<Y, R>::done(R ret) -> void {
     _result = ret;
 }
 
 template<typename Y, typename R>
 auto Generator<Y, R>::is_complete() -> bool {
-    return !*_resume;
+    return !(*_resume);
 }
 
 template<typename Y, typename R>
