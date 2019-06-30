@@ -26,4 +26,5 @@ auto main() -> int {
     pull();
     cout << pull.get() << endl;
     cout << !pull << endl;
+    return 0;
 }

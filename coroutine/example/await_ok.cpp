@@ -10,5 +10,5 @@ using sio::future::FutureOk;
 auto main() -> int {
     auto a = await FutureOk(1);
     std::cout << a << std::endl;
-    return 1;
+    return 0;
 }

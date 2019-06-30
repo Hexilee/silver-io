@@ -28,5 +28,5 @@ auto main() -> int {
         cout << g->resume() << endl;
     }
     cout << "done: " << g->result() << endl;
-    return 1;
+    return 0;
 }
