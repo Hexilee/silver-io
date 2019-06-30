@@ -6,7 +6,7 @@
 
 using namespace sio::future;
 
-FuncContext::FuncContext(std::function<auto() -> void>&& waker) : waker(waker) {}
+FuncContext::FuncContext(std::function<auto() -> void> &&waker) : waker(waker) {}
 
 auto FuncContext::wake() -> void {
     waker();

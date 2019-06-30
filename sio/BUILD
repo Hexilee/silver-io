@@ -16,5 +16,8 @@ cc_library(
         "//future:future",
         "@uvw//:uvw",
     ],
+    copts = [
+        "-std=c++17"
+    ],
 )
 

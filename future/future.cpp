@@ -21,7 +21,7 @@ auto Poll<T>::is_complete() -> bool {
 }
 
 template<typename T>
-auto Poll<T>::get() -> const Output& {
+auto Poll<T>::get() -> const Output & {
     return value;
 }
 
@@ -54,8 +54,8 @@ auto FutureOk<T>::poll(shared_ptr<Context> _ctx) -> Poll<T> {
 }
 
 template<typename T>
-FutureOk<T>::FutureOk(T&& value):value(value) {}
+FutureOk<T>::FutureOk(T &&value):value(value) {}
 
 template<typename T>
-FutureOk<T>::FutureOk(const T& value):value(value) {}
+FutureOk<T>::FutureOk(const T &value):value(value) {}
 

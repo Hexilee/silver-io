@@ -27,6 +27,9 @@ cc_binary(
     linkopts = [
         "-lboost_coroutine"
     ],
+    copts = [
+        "-std=c++17"
+    ],
 )
 
 cc_binary(
