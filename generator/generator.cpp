@@ -39,11 +39,6 @@ auto Generator<Y, R>::yield(Y value) -> void {
 }
 
 template<typename Y, typename R>
-auto Generator<Y, R>::yield() -> void {
-    _yield(nullptr);
-}
-
-template<typename Y, typename R>
 auto Generator<Y, R>::done(R ret) -> void {
     _result = ret;
 }

@@ -27,7 +27,6 @@ namespace sio::generator {
         static thread_local Generator<Y, R> *this_generator;
         auto resume() -> const Y &;
         auto yield(Y value) -> void;
-        auto yield() -> void;
         auto done(R ret) -> void;
         auto is_complete() -> bool;
         auto result() -> const R &;

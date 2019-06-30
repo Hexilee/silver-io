@@ -11,6 +11,7 @@ cc_library(
     ],
     deps = [
         "//future:future",
+        "//generator:generator"
     ],
     copts = [
         "-std=c++17"

@@ -27,7 +27,7 @@ namespace sio::future {
     class FuncContext: public Context {
         std::function<auto() -> void> waker;
       public:
-        FuncContext(std::function<auto() -> void> waker);
+        FuncContext(std::function<auto() -> void>&& waker);
         auto wake() -> void override;
     };
 }

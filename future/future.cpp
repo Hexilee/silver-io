@@ -8,25 +8,25 @@ using namespace sio::future;
 using sio::future::ThreadLocalContext;
 using moodycamel::BlockingConcurrentQueue;
 
-template<class T>
+template<typename T>
 auto Poll<T>::pending() -> Poll {
     Poll poll;
     poll.complete = false;
     return poll;
 }
 
-template<class T>
+template<typename T>
 auto Poll<T>::is_complete() -> bool {
     return complete;
 }
 
-template<class T>
-auto Poll<T>::get() -> Output {
+template<typename T>
+auto Poll<T>::get() -> const Output& {
     return value;
 }
 
 
-template<class T>
+template<typename T>
 auto Future<T>::wait() -> T {
     class Signal;
     BlockingConcurrentQueue<Signal> channel;
@@ -41,3 +41,12 @@ auto Future<T>::wait() -> T {
     }
     return poll_result.get();
 }
+
+template<typename T>
+auto FutureOk<T>::poll(shared_ptr<Context> ctx) -> Poll<T> {
+    return Poll(value);
+}
+
+template<typename T>
+FutureOk<T>::FutureOk(T value):value(value) {}
+

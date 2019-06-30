@@ -3,3 +3,15 @@
  */
 
 #include "coroutine.hpp"
+
+using namespace sio::coroutine;
+
+template<typename T>
+auto Coroutine<T>::yield() {
+    Gen::this_generator->yield(Context::Hup);
+}
+
+template<typename T>
+auto Coroutine<T>::done(T value) {
+    Gen::this_generator->done(value);
+}
