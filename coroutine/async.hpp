@@ -9,11 +9,11 @@
 #include "future/future.hpp"
 #include "coroutine/coroutine.hpp"
 
-#define await sio::coroutine::Await() <<
+#define await sio::coroutine::Awaiter() <<
 namespace sio::coroutine {
     using sio::future::Future;
     
-    class Await {
+    class Awaiter {
       public:
         template<typename T>
         auto operator<<(Future<T> &f) -> const T &;

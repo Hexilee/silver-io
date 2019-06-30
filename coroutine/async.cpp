@@ -4,18 +4,18 @@
 
 #include "async.hpp"
 
-using sio::coroutine::Await;
+using sio::coroutine::Awaiter;
 
 template<typename T>
-auto sio::coroutine::Await::operator<<(sio::future::Future<T> &f) -> const T & {
+auto sio::coroutine::Awaiter::operator<<(sio::future::Future<T> &f) -> const T & {
     operator<<(std::move(f));
 }
 
 template<typename T>
-auto sio::coroutine::Await::operator<<(sio::future::Future<T>&& f) -> const T & {
+auto sio::coroutine::Awaiter::operator<<(sio::future::Future<T>&& f) -> const T & {
     auto poll_result = f.poll(sio::future::ThreadLocalContext);
     while (!poll_result.is_complete()) {
-        sio::coroutine::Coroutine<typename decltype(poll_result)::Output>::yield();
+        sio::coroutine::Coroutine<T>::yield();
         poll_result = f.poll(sio::future::ThreadLocalContext);
     }
     return poll_result.get();
