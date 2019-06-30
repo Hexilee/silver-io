@@ -4,7 +4,7 @@
 
 #ifndef SILVER_IO_COROUTINE_HPP
 #define SILVER_IO_COROUTINE_HPP
-namespace sio::coroutine {
 
+namespace sio::coroutine {
 }
 #endif //SILVER_IO_COROUTINE_HPP
