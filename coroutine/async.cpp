@@ -8,6 +8,11 @@ using sio::coroutine::Await;
 
 template<typename T>
 auto sio::coroutine::Await::operator<<(sio::future::Future<T> &f) -> const T & {
+    operator<<(std::move(f));
+}
+
+template<typename T>
+auto sio::coroutine::Await::operator<<(sio::future::Future<T>&& f) -> const T & {
     auto poll_result = f.poll(sio::future::ThreadLocalContext);
     while (!poll_result.is_complete()) {
         sio::coroutine::Coroutine<typename decltype(poll_result)::Output>::yield();

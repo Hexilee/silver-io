@@ -38,8 +38,8 @@ namespace sio::future {
     class FutureOk: public Future<T> {
         T value;
       public:
-        FutureOk(const T &value);
-        FutureOk(T &&value);
+        explicit FutureOk(const T &value);
+        explicit FutureOk(T &&value);
         auto poll(shared_ptr<Context> ctx) -> Poll<T> override;
     };
 }

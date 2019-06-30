@@ -34,3 +34,19 @@ cc_binary(
         "//generator:generator"
     ]
 )
+
+cc_binary(
+    name = "await_ok",
+    srcs = glob([
+        "example/await_ok.*",
+    ]),
+    includes = [
+        "example/",
+    ],
+    copts = [
+        "-std=c++17"
+    ],
+    deps = [
+        "//coroutine:coroutine"
+    ]
+)

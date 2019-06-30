@@ -9,7 +9,7 @@
 #include "future/future.hpp"
 #include "coroutine/coroutine.hpp"
 
-#define await Await() <<
+#define await sio::coroutine::Await() <<
 namespace sio::coroutine {
     using sio::future::Future;
     
@@ -17,12 +17,9 @@ namespace sio::coroutine {
       public:
         template<typename T>
         auto operator<<(Future<T> &f) -> const T &;
+        
+        template<typename T>
+        auto operator<<(Future<T> && f) -> const T &;
     };
-    
-    auto fn() {
-        auto f = sio::future::FutureOk(1);
-        auto result = await f;
-        std::cout << result << std::endl;
-    }
 }
 #endif //SILVER_IO_ASYNC_HPP
