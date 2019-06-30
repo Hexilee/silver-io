@@ -12,6 +12,9 @@ cc_library(
     linkopts = [
         "-lboost_coroutine"
     ],
+    copts = [
+        "-std=c++17"
+    ],
     linkstatic = 1,
 )
 
@@ -32,6 +35,9 @@ cc_binary(
     ]),
     deps = [
         "generator"
+    ],
+    copts = [
+        "-std=c++17"
     ],
 )
 

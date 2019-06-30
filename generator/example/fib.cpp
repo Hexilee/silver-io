@@ -18,10 +18,15 @@ auto fab(int n) {
             a = b;
             b = next;
         }
+        Generator<int, int>::this_generator->done(a);
     });
 }
 
 auto main() -> int {
     auto g = fab(10);
-    cout << g->is_complete() << endl;
+    while(!g->is_complete()) {
+        cout << g->resume() << endl;
+    }
+    cout << "done: " << g->result() << endl;
+    return 1;
 }
