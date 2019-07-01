@@ -3,5 +3,3 @@
  */
 
 #include "async.hpp"
-
-using sio::coroutine::Awaiter;
