@@ -25,7 +25,6 @@ auto fab(int max) {
 
 auto main() -> int {
     auto g = fab(10);
-    cout << "yield " << g->current_yield() << endl;
     while (!g->is_complete()) {
         cout << "yield " << g->resume() << endl;
     }
