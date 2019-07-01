@@ -9,9 +9,10 @@ using std::cout;
 using std::endl;
 using sio::generator::Generator;
 
-auto fab(int n) {
-    int a = 0, b = 1, next;
-    return new Generator<int, int>([&]() {
+auto fab(int max) {
+    return new Generator<int, int>([=] {
+        auto n = max;
+        int a = 0, b = 1, next;
         for (int i = 0; i < n; i++) {
             Generator<int, int>::this_generator->yield(a);
             next = a + b;
@@ -24,8 +25,9 @@ auto fab(int n) {
 
 auto main() -> int {
     auto g = fab(10);
-    while(!g->is_complete()) {
-        cout << g->resume() << endl;
+    cout << "yield " << g->current_yield() << endl;
+    while (!g->is_complete()) {
+        cout << "yield " << g->resume() << endl;
     }
     cout << "done: " << g->result() << endl;
     return 0;

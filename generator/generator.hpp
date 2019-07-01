@@ -17,6 +17,7 @@ namespace sio::generator {
     class Generator {
         using Yield = typename boost_coroutine<Y>::push_type;
         using Resume = typename boost_coroutine<Y>::pull_type;
+        // managed by _resume
         Yield *_yield;
         Resume *_resume;
         R _result;
@@ -26,6 +27,7 @@ namespace sio::generator {
         ~Generator();
         static thread_local Generator<Y, R> *this_generator;
         auto resume() -> Y;
+        auto current_yield() -> Y;
         auto yield(Y value) -> void;
         auto done(R ret) -> void;
         auto is_complete() -> bool;
@@ -37,7 +39,7 @@ namespace sio::generator {
     
     template<typename Y, typename R>
     Generator<Y, R>::Generator(std::function<auto() -> void> &&fn) {
-        _resume = new Resume([&](Yield& yield) {
+        _resume = new Resume([&](Yield &yield) {
             _yield = &yield;
             set_this_generator();
             fn();
@@ -46,7 +48,6 @@ namespace sio::generator {
     
     template<typename Y, typename R>
     Generator<Y, R>::~Generator() {
-        delete _yield;
         delete _resume;
     }
     
@@ -59,6 +60,11 @@ namespace sio::generator {
     auto Generator<Y, R>::resume() -> Y {
         set_this_generator();
         (*_resume)();
+        return _resume->get();
+    }
+    
+    template<typename Y, typename R>
+    auto Generator<Y, R>::current_yield() -> Y {
         return _resume->get();
     }
     
