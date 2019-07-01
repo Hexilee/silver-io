@@ -48,5 +48,8 @@ cc_binary(
     ],
     deps = [
         "//coroutine:sio_coroutine"
-    ]
+    ],
+    linkopts = [
+        "-lboost_coroutine"
+    ],
 )
