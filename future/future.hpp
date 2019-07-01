@@ -32,8 +32,8 @@ namespace sio::future {
     class Future {
       public:
         auto wait() -> T;
-        virtual auto poll(shared_ptr<Context> ctx) -> Poll<T>;
-        virtual ~Future();
+        virtual auto poll(shared_ptr<Context> ctx) -> Poll<T> = 0;
+        virtual ~Future() = default;
     };
     
     template<typename T>
