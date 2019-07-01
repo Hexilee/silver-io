@@ -6,7 +6,7 @@
 
 using namespace sio::coroutine;
 
-auto async_task(uint64_t n) -> unique_ptr<Future<uint64_t >> {
+auto async_task(uint64_t n) {
     return async [=] {
         return n;
     };
