@@ -15,12 +15,12 @@ namespace sio::future {
     
     template<typename T>
     class Poll {
-        const T &value;
+        T &value;
         bool complete;
       public:
         using Output = T;
         
-        explicit Poll(const Output &value) : value(value), complete(true) {};
+        explicit Poll(Output &value) : value(value), complete(true) {};
         auto operator=(Poll &&other) noexcept -> Poll &;
         static auto pending() -> Poll;
         auto is_complete() -> bool;
@@ -33,6 +33,7 @@ namespace sio::future {
       public:
         auto wait() -> T;
         virtual auto poll(shared_ptr<Context> ctx) -> Poll<T>;
+        virtual ~Future();
     };
     
     template<typename T>

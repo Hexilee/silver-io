@@ -28,7 +28,7 @@ namespace sio::generator {
         static thread_local Generator<Y, R> *this_generator;
         auto resume() -> Y;
         auto yield(Y value) -> void;
-        auto done(R ret) -> void;
+        auto complete(R ret) -> void;
         auto is_complete() -> bool;
         auto result() -> const R &;
     };
@@ -69,7 +69,7 @@ namespace sio::generator {
     }
     
     template<typename Y, typename R>
-    auto Generator<Y, R>::done(R ret) -> void {
+    auto Generator<Y, R>::complete(R ret) -> void {
         _result = ret;
     }
     

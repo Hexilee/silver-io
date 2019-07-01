@@ -8,7 +8,8 @@
 using sio::future::FutureOk;
 
 auto main() -> int {
-    auto a = await FutureOk(1);
+    auto f = FutureOk(1);
+    auto a = await f;
     std::cout << a << std::endl;
     return 0;
 }

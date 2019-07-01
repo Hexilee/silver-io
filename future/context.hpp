@@ -21,7 +21,7 @@ namespace sio::future {
     class Context {
       public:
         virtual auto wake() -> void;
-        virtual ~Context() = 0;
+        virtual ~Context();
     };
     
     class FuncContext: public Context {
