@@ -25,7 +25,7 @@ namespace sio::generator {
         explicit Generator(std::function<auto() -> void> &&fn);
         ~Generator();
         static thread_local Generator<Y, R> *this_generator;
-        auto resume() -> const Y &;
+        auto resume() -> Y;
         auto yield(Y value) -> void;
         auto done(R ret) -> void;
         auto is_complete() -> bool;
@@ -34,5 +34,52 @@ namespace sio::generator {
     
     template<typename Y, typename R>
     thread_local Generator<Y, R> *Generator<Y, R>::this_generator = nullptr;
+    
+    template<typename Y, typename R>
+    Generator<Y, R>::Generator(std::function<auto() -> void> &&fn) {
+        _resume = new Resume([&](Yield yield) {
+            _yield = &yield;
+            set_this_generator();
+            fn();
+        });
+    }
+    
+    template<typename Y, typename R>
+    Generator<Y, R>::~Generator() {
+        delete _yield;
+        delete _resume;
+    }
+    
+    template<typename Y, typename R>
+    auto Generator<Y, R>::set_this_generator() -> void {
+        this_generator = this;
+    }
+    
+    template<typename Y, typename R>
+    auto Generator<Y, R>::resume() -> Y {
+        set_this_generator();
+        (*_resume)();
+        return _resume->get();
+    }
+    
+    template<typename Y, typename R>
+    auto Generator<Y, R>::yield(Y value) -> void {
+        (*_yield)(value);
+    }
+    
+    template<typename Y, typename R>
+    auto Generator<Y, R>::done(R ret) -> void {
+        _result = ret;
+    }
+    
+    template<typename Y, typename R>
+    auto Generator<Y, R>::is_complete() -> bool {
+        return !(*_resume);
+    }
+    
+    template<typename Y, typename R>
+    auto Generator<Y, R>::result() -> const R & {
+        return _result;
+    }
 }
 #endif //SILVER_IO_GENERATOR_HPP

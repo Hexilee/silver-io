@@ -1,21 +1,14 @@
 cc_library(
     name = "sio_generator",
-    srcs = glob([
-        "*.cpp",
-    ]),
     hdrs = glob([
         "*.hpp",
     ]),
     includes = [
         ".",
     ],
-    linkopts = [
-        "-lboost_coroutine"
-    ],
     copts = [
         "-std=c++17"
     ],
-    linkstatic = 1,
     visibility = ["//visibility:public"],
 )
 
@@ -39,6 +32,9 @@ cc_binary(
     ]),
     deps = [
         "sio_generator"
+    ],
+    linkopts = [
+        "-lboost_coroutine"
     ],
     copts = [
         "-std=c++17"
