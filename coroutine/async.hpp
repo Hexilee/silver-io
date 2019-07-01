@@ -22,6 +22,11 @@ namespace sio::coroutine {
         auto operator<<(Future<T> &&f) -> const T &;
     };
     
+//    class Asyncer {
+//      public:
+//        template <typename Fn>
+//    };
+    
     template<typename T>
     auto sio::coroutine::Awaiter::operator<<(sio::future::Future<T> &f) -> const T & {
         return (*this) << std::move(f);
