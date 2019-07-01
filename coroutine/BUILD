@@ -34,3 +34,19 @@ cc_binary(
         "//coroutine:sio_coroutine"
     ]
 )
+
+cc_binary(
+    name = "async",
+    srcs = glob([
+        "example/async.*",
+    ]),
+    includes = [
+        "example/",
+    ],
+    copts = [
+        "-std=c++17"
+    ],
+    deps = [
+        "//coroutine:sio_coroutine"
+    ]
+)

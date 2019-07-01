@@ -27,12 +27,11 @@ namespace sio::future {
         auto get() -> const Output &;
     };
     
-    
     template<typename T>
     class Future {
       public:
         auto wait() -> T;
-        virtual auto poll(shared_ptr<Context> ctx) -> Poll<T> = 0;
+        virtual auto poll() -> Poll<T> = 0;
         virtual ~Future() = default;
     };
     
@@ -42,7 +41,17 @@ namespace sio::future {
       public:
         explicit FutureOk(const T &value);
         explicit FutureOk(T &&value);
-        auto poll(shared_ptr<Context> ctx) -> Poll<T> override;
+        auto poll() -> Poll<T> override;
+    };
+    
+    template<typename T>
+    class CounterFuture: public Future<T> {
+        T value;
+        uint64_t counter;
+        uint64_t ceiling;
+      public:
+        CounterFuture(T value, uint64_t ceiling) : value(value), counter(0), ceiling(ceiling) {}
+        auto poll() -> Poll<T> override;
     };
     
     template<typename T>
@@ -72,7 +81,7 @@ namespace sio::future {
     template<typename T>
     auto Future<T>::wait() -> T {
         class Signal;
-        BlockingConcurrentQueue <Signal> channel;
+        BlockingConcurrentQueue<Signal> channel;
         ThreadLocalContext = make_shared<FuncContext>([&channel]() {
             channel.enqueue(Signal());
         });
@@ -80,13 +89,13 @@ namespace sio::future {
         Signal signal;
         while (!poll_result.is_complete()) {
             channel.wait_dequeue(&signal);
-            poll_result = poll(ThreadLocalContext);
+            poll_result = poll();
         }
         return poll_result.get();
     }
     
     template<typename T>
-    auto FutureOk<T>::poll(shared_ptr<Context> _ctx) -> Poll<T> {
+    auto FutureOk<T>::poll() -> Poll<T> {
         return Poll(value);
     }
     
@@ -95,5 +104,10 @@ namespace sio::future {
     
     template<typename T>
     FutureOk<T>::FutureOk(const T &value):value(value) {}
+    
+    template<typename T>
+    auto CounterFuture<T>::poll() -> Poll<T> {
+        return counter++ >= ceiling ? Poll(value) : Poll<T>::pending();
+    }
 }
 #endif //SILVER_IO_FUTURE_HPP
