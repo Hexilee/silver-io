@@ -13,7 +13,7 @@ cc_library(
         "executor/*.hpp",
     ],
     deps = [
-        "//future:future",
+        "//future:sio_future",
         "@uvw//:uvw",
     ],
     copts = [

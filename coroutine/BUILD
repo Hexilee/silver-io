@@ -1,5 +1,5 @@
 cc_library(
-    name = "coroutine",
+    name = "sio_coroutine",
     srcs = glob([
         "*.cpp",
     ]),
@@ -10,8 +10,8 @@ cc_library(
         ".",
     ],
     deps = [
-        "//future:future",
-        "//generator:generator"
+        "//future:sio_future",
+        "//generator:sio_generator"
     ],
     copts = [
         "-std=c++17"
@@ -31,7 +31,7 @@ cc_binary(
         "-std=c++17"
     ],
     deps = [
-        "//generator:generator"
+        "//generator:sio_generator"
     ]
 )
 
@@ -47,6 +47,6 @@ cc_binary(
         "-std=c++17"
     ],
     deps = [
-        "//coroutine:coroutine"
+        "//coroutine:sio_coroutine"
     ]
 )

@@ -1,5 +1,5 @@
 cc_library(
-    name = "future",
+    name = "sio_future",
     srcs = glob([
         "*.cpp",
     ]),

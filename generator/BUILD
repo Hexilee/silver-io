@@ -1,5 +1,5 @@
 cc_library(
-    name = "generator",
+    name = "sio_generator",
     srcs = glob([
         "*.cpp",
     ]),
@@ -38,7 +38,7 @@ cc_binary(
         "example/fib.*",
     ]),
     deps = [
-        "generator"
+        "sio_generator"
     ],
     copts = [
         "-std=c++17"
