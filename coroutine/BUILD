@@ -20,22 +20,6 @@ cc_library(
 )
 
 cc_binary(
-    name = "fibonacci",
-    srcs = glob([
-        "example/fibonacci.*",
-    ]),
-    includes = [
-        "example/",
-    ],
-    copts = [
-        "-std=c++17"
-    ],
-    deps = [
-        "//generator:sio_generator"
-    ]
-)
-
-cc_binary(
     name = "await_ok",
     srcs = glob([
         "example/await_ok.*",
