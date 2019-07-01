@@ -37,7 +37,7 @@ namespace sio::generator {
     
     template<typename Y, typename R>
     Generator<Y, R>::Generator(std::function<auto() -> void> &&fn) {
-        _resume = new Resume([&](Yield yield) {
+        _resume = new Resume([&](Yield& yield) {
             _yield = &yield;
             set_this_generator();
             fn();
