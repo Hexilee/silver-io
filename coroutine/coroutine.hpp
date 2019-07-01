@@ -16,6 +16,7 @@ namespace sio::coroutine {
     class Coroutine: public Generator<Context, T> {
         using Gen = Generator<Context, T>;
       public:
+        explicit Coroutine(std::function<auto() -> T> &&fn);
         static auto yield() -> void;
     };
     
@@ -23,5 +24,8 @@ namespace sio::coroutine {
     auto Coroutine<T>::yield() -> void {
         Gen::this_generator->yield(Context::Hup);
     }
+    
+    template<typename T>
+    Coroutine<T>::Coroutine(std::function<auto() -> T> &&fn): Generator<Context, T>(std::move(fn)) {}
 }
 #endif //SILVER_IO_COROUTINE_HPP

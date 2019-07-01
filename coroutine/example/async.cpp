@@ -4,6 +4,14 @@
 
 #include "coroutine/async.hpp"
 
-auto read_async() {
+using namespace sio::coroutine;
 
+auto async_task(uint64_t n) -> unique_ptr<Future<uint64_t >> {
+    return async [=] {
+        return n;
+    };
+}
+
+auto main() -> int {
+    auto task = async_task(5);
 }

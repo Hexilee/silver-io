@@ -8,13 +8,13 @@
 #include <iostream>
 #include <functional>
 #include <memory>
+#include <type_traits>
 #include "future/future.hpp"
 #include "coroutine/coroutine.hpp"
 #include "coroutine/co_future.hpp"
 
 #define await sio::coroutine::Awaiter() <<
 #define async sio::coroutine::Asyncer() <<
-
 namespace sio::coroutine {
     using sio::future::Future;
     using std::function;
@@ -24,17 +24,17 @@ namespace sio::coroutine {
     class Awaiter {
       public:
         template<typename T>
-        auto operator<<(Future<T> &&f) -> const T &;
+        auto operator<<(Future<T> &&f) -> T &&;
     };
     
     class Asyncer {
       public:
-        template<typename T>
-        auto operator<<(function<auto() -> T> &&f) -> unique_ptr<Future<T>>;
+        template<typename Fn, typename T = typename std::result_of<Fn(void)>::type>
+        auto operator<<(Fn &&lambda) -> unique_ptr<Future<T>>;
     };
     
     template<typename T>
-    auto Awaiter::operator<<(sio::future::Future<T> &&f) -> const T & {
+    auto Awaiter::operator<<(sio::future::Future<T> &&f) -> T && {
         auto poll_result = f.poll();
         while (!poll_result.is_complete()) {
             sio::coroutine::Coroutine<T>::yield();
@@ -43,9 +43,9 @@ namespace sio::coroutine {
         return poll_result.get();
     }
     
-    template<typename T>
-    auto Asyncer::operator<<(function<auto() -> T> &&f) -> unique_ptr<Future<T>> {
-        return make_unique<CoFuture>(f);
+    template<typename Fn, typename T>
+    auto Asyncer::operator<<(Fn &&lambda) -> unique_ptr<Future<T>> {
+        return make_unique<CoFuture<T> >(static_cast<function<auto() -> T>>(lambda));
     }
 }
 #endif //SILVER_IO_ASYNC_HPP

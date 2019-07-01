@@ -15,16 +15,17 @@ namespace sio::future {
     
     template<typename T>
     class Poll {
-        T &value;
+        T *value;
         bool complete;
       public:
         using Output = T;
         
-        explicit Poll(Output &value) : value(value), complete(true) {};
+        Poll() : value(nullptr), complete(false) {};
+        
+        explicit Poll(Output &value) : value(&value), complete(true) {};
         auto operator=(Poll &&other) noexcept -> Poll &;
-        static auto pending() -> Poll;
         auto is_complete() -> bool;
-        auto get() -> const Output &;
+        auto get() -> Output &&;
     };
     
     template<typename T>
@@ -51,15 +52,9 @@ namespace sio::future {
         uint64_t ceiling;
       public:
         CounterFuture(T value, uint64_t ceiling) : value(value), counter(0), ceiling(ceiling) {}
+        
         auto poll() -> Poll<T> override;
     };
-    
-    template<typename T>
-    auto Poll<T>::pending() -> Poll {
-        Poll poll;
-        poll.complete = false;
-        return poll;
-    }
     
     template<typename T>
     auto Poll<T>::is_complete() -> bool {
@@ -67,8 +62,8 @@ namespace sio::future {
     }
     
     template<typename T>
-    auto Poll<T>::get() -> const Output & {
-        return value;
+    auto Poll<T>::get() -> Output && {
+        return std::move(*value);
     }
     
     template<typename T>
@@ -107,7 +102,7 @@ namespace sio::future {
     
     template<typename T>
     auto CounterFuture<T>::poll() -> Poll<T> {
-        return counter++ >= ceiling ? Poll(value) : Poll<T>::pending();
+        return counter++ >= ceiling ? Poll(value) : Poll<T>();
     }
 }
 #endif //SILVER_IO_FUTURE_HPP

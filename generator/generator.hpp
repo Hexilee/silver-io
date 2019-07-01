@@ -30,7 +30,7 @@ namespace sio::generator {
         auto yield(Y value) -> void;
         auto complete(R ret) -> void;
         auto is_complete() -> bool;
-        auto result() -> const R &;
+        auto result() -> R &;
     };
     
     template<typename Y, typename R>
@@ -79,7 +79,7 @@ namespace sio::generator {
     }
     
     template<typename Y, typename R>
-    auto Generator<Y, R>::result() -> const R & {
+    auto Generator<Y, R>::result() -> R & {
         return _result;
     }
 }
