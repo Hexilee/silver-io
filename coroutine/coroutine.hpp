@@ -17,17 +17,11 @@ namespace sio::coroutine {
         using Gen = Generator<Context, T>;
       public:
         static auto yield() -> void;
-        static auto done(T value) -> void;
     };
     
     template<typename T>
     auto Coroutine<T>::yield() -> void {
         Gen::this_generator->yield(Context::Hup);
-    }
-    
-    template<typename T>
-    auto Coroutine<T>::done(T value) -> void {
-        Gen::this_generator->complete(value);
     }
 }
 #endif //SILVER_IO_COROUTINE_HPP

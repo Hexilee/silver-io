@@ -19,7 +19,7 @@ auto fab(int max) {
             a = b;
             b = next;
         }
-        Generator<int, int>::this_generator->complete(a);
+        return a;
     });
 }
 

@@ -23,7 +23,7 @@ namespace sio::generator {
         R _result;
         auto set_this_generator() -> void;
       public:
-        explicit Generator(std::function<auto() -> void> &&fn);
+        explicit Generator(std::function<auto() -> R> &&fn);
         ~Generator();
         static thread_local Generator<Y, R> *this_generator;
         auto resume() -> Y;
@@ -37,11 +37,11 @@ namespace sio::generator {
     thread_local Generator<Y, R> *Generator<Y, R>::this_generator = nullptr;
     
     template<typename Y, typename R>
-    Generator<Y, R>::Generator(std::function<auto() -> void> &&fn) {
+    Generator<Y, R>::Generator(std::function<auto() -> R> &&fn) {
         _resume = new Resume([&](Yield &yield) {
             _yield = &yield;
             set_this_generator();
-            fn();
+            complete(fn());
         });
     }
     
