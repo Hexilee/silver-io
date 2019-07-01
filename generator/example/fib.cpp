@@ -9,9 +9,8 @@ using std::cout;
 using std::endl;
 using sio::generator::Generator;
 
-auto fab(int max) {
+auto fab(int n) {
     return new Generator<int, int>([=] {
-        auto n = max;
         int a = 0, b = 1, next;
         for (int i = 0; i < n; i++) {
             Generator<int, int>::this_generator->yield(a);

@@ -9,31 +9,27 @@
 #include "future/future.hpp"
 #include "coroutine/coroutine.hpp"
 
-#define await sio::coroutine::Awaiter() <<
+#define await *
 namespace sio::coroutine {
     using sio::future::Future;
+    template<typename T>
+    auto operator*(Future<T> &f) -> const T &;
     
-    class Awaiter {
-      public:
-        template<typename T>
-        auto operator<<(Future<T> &f) -> const T &;
+    template<typename T>
+    auto operator*(Future<T> &&f) -> const T &;
 
-        template<typename T>
-        auto operator<<(Future<T> &&f) -> const T &;
-    };
-    
 //    class Asyncer {
 //      public:
 //        template <typename Fn>
 //    };
     
     template<typename T>
-    auto sio::coroutine::Awaiter::operator<<(sio::future::Future<T> &f) -> const T & {
-        return (*this) << std::move(f);
+    auto operator*(sio::future::Future<T> &f) -> const T & {
+        return *std::move(f);
     }
     
     template<typename T>
-    auto sio::coroutine::Awaiter::operator<<(sio::future::Future<T> &&f) -> const T & {
+    auto operator*(sio::future::Future<T> &&f) -> const T & {
         auto poll_result = f.poll(sio::future::ThreadLocalContext);
         while (!poll_result.is_complete()) {
             sio::coroutine::Coroutine<T>::yield();
