@@ -27,5 +27,36 @@ namespace sio::future {
             return Flow(FlowStatus::Break);
         }
     };
+    
+    template<typename T>
+    class Stream {
+      public:
+        using Flow = Flow<T>;
+        virtual auto flow() -> Flow = 0;
+        virtual ~Stream() = default;
+    };
+    
+    template<int64_t From, int64_t To, int64_t Diff>
+    class RangeStream: public Stream<int64_t> {
+        int64_t counter;
+      public:
+        RangeStream();
+        auto flow() -> Flow override;
+    };
+    
+    template<int64_t From, int64_t To, int64_t Diff>
+    auto RangeStream<From, To, Diff>::flow() -> Flow {
+        counter++;
+        if (counter >= To) {
+            return Flow::Break();
+        }
+        if ((counter - From) % Diff == 0) {
+            return Flow(counter);
+        }
+        return Flow();
+    }
+    
+    template<int64_t From, int64_t To, int64_t Diff>
+    RangeStream<From, To, Diff>::RangeStream():counter(From - 1) {}
 }
 #endif //SILVER_IO_STREAM_HPP
