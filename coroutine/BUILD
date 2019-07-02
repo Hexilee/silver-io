@@ -53,3 +53,21 @@ cc_binary(
         "-lboost_coroutine"
     ],
 )
+
+cc_test(
+    name = "coroutine_sample",
+    size = "small",
+    srcs = glob([
+        "test/*.cpp"
+    ]),
+    copts = [
+        "-std=c++17"
+    ],
+    deps = [
+        "@gtest//:gtest_main",
+         "//coroutine:sio_coroutine"
+    ],
+    linkopts = [
+        "-lboost_coroutine"
+    ],
+)

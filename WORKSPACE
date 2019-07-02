@@ -19,3 +19,9 @@ new_git_repository(
     remote = "https://github.com/cameron314/concurrentqueue.git",
     tag = "v1.0.0-beta",
 )
+
+git_repository(
+    name = "gtest",
+    remote = "https://github.com/google/googletest.git",
+    tag = "release-1.8.1",
+)
