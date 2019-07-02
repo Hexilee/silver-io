@@ -19,41 +19,6 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-cc_binary(
-    name = "await_ok",
-    srcs = glob([
-        "example/await_ok.*",
-    ]),
-    includes = [
-        "example/",
-    ],
-    copts = [
-        "-std=c++17"
-    ],
-    deps = [
-        "//coroutine:sio_coroutine"
-    ]
-)
-
-cc_binary(
-    name = "async",
-    srcs = glob([
-        "example/async.*",
-    ]),
-    includes = [
-        "example/",
-    ],
-    copts = [
-        "-std=c++17"
-    ],
-    deps = [
-        "//coroutine:sio_coroutine"
-    ],
-    linkopts = [
-        "-lboost_coroutine"
-    ],
-)
-
 cc_test(
     name = "coroutine_sample",
     size = "small",
