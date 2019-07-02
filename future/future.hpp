@@ -21,9 +21,8 @@ namespace sio::future {
         using Status = S;
         using Output = T;
         StatusBox(T *value, S stat);
-        auto operator=(StatusBox &&other) noexcept -> StatusBox &;
-        auto status() -> const Status &;
-        auto get() -> Output &&;
+        auto status() const -> const Status &;
+        auto get() const -> Output &&;
     };
     
     enum class PollStatus {
@@ -69,19 +68,12 @@ namespace sio::future {
     };
     
     template<typename T, typename S>
-    auto StatusBox<T, S>::operator=(StatusBox &&other) noexcept -> StatusBox & {
-        value = other.value;
-        stat = other.stat;
-        return *this;
-    }
-    
-    template<typename T, typename S>
-    auto StatusBox<T, S>::status() -> const Status & {
+    auto StatusBox<T, S>::status() const -> const Status & {
         return stat;
     }
     
     template<typename T, typename S>
-    auto StatusBox<T, S>::get() -> Output && {
+    auto StatusBox<T, S>::get() const -> Output && {
         return std::move(*value);
     }
     

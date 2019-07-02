@@ -17,7 +17,7 @@ namespace sio::coroutine {
     
     template<typename T>
     class StreamIter {
-        unique_ptr<Stream<T>> stream;
+        Stream<T> &stream;
       public:
         using Stream = Stream<T>;
         using Flow = Flow<T>;
@@ -32,12 +32,12 @@ namespace sio::coroutine {
     
     template<typename T>
     auto StreamIter<T>::begin() -> StreamIter::iterator {
-        return StreamIter::iterator(*stream);
+        return StreamIter::iterator(stream);
     }
     
     template<typename T>
     auto StreamIter<T>::end() -> StreamIter::iterator {
-        return StreamIter::iterator(*stream, Flow::Break());
+        return StreamIter::iterator(stream, Flow::Break());
     }
     
     template<typename T>
@@ -70,14 +70,14 @@ namespace sio::coroutine {
             return retval;
         }
         
-        auto operator==(iterator other) const { return current_flow.status() == other.current_flow.status(); }
+        auto operator==(iterator &other) const { return current_flow.status() == other.current_flow.status(); }
         
-        auto operator!=(iterator other) const { return !(*this == other); }
+        auto operator!=(iterator &other) const { return !(*this == other); }
         
         auto operator*() const -> T && { return current_flow.get(); }
     };
     
     template<typename T>
-    StreamIter<T>::StreamIter(Stream &&stream):stream(unique_ptr(stream)) {}
+    StreamIter<T>::StreamIter(Stream &&stream):stream(stream) {}
 }
 #endif //SILVER_IO_STREAM_ITER_HPP

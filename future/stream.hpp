@@ -36,7 +36,7 @@ namespace sio::future {
         virtual ~Stream() = default;
     };
     
-    template<int64_t From, int64_t To, int64_t Diff>
+    template<int64_t From, int64_t To, int64_t Diff = 1>
     class RangeStream: public Stream<int64_t> {
         int64_t counter;
       public:
