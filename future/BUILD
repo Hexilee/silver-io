@@ -18,3 +18,18 @@ cc_library(
     visibility = ["//visibility:public"],
     linkstatic = 1,
 )
+
+cc_test(
+    name = "future_test",
+    size = "small",
+    srcs = glob([
+        "test/*.cpp"
+    ]),
+    copts = [
+        "-std=c++17"
+    ],
+    deps = [
+        "@gtest//:gtest_main",
+         "//future:sio_future"
+    ],
+)
