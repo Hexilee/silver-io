@@ -13,25 +13,31 @@ namespace sio::future {
     using std::shared_ptr;
     using moodycamel::BlockingConcurrentQueue;
     
+    template<typename T, typename S>
+    class StatusBox {
+        T *value;
+        S stat;
+      public:
+        using Status = S;
+        using Output = T;
+        StatusBox(T *value, S stat);
+        auto operator=(StatusBox &&other) noexcept -> StatusBox &;
+        auto status() -> const Status &;
+        auto get() -> Output &&;
+    };
+    
     enum class PollStatus {
         Pending,
         Ready,
     };
     
     template<typename T>
-    class Poll {
-        T *value;
-        PollStatus stat;
+    class Poll: public StatusBox<T, PollStatus> {
+        using Super = StatusBox<T, PollStatus>;
       public:
-        using Status = PollStatus;
-        using Output = T;
+        Poll() : Super(nullptr, PollStatus::Pending) {};
         
-        Poll() : value(nullptr), stat(Status::Pending) {};
-        
-        explicit Poll(Output &value) : value(&value), stat(Status::Ready) {};
-        auto operator=(Poll &&other) noexcept -> Poll &;
-        auto status() -> const Status &;
-        auto get() -> Output &&;
+        explicit Poll(T &value) : Super(&value, PollStatus::Ready) {};
     };
     
     template<typename T>
@@ -62,22 +68,25 @@ namespace sio::future {
         auto poll() -> Poll<T> override;
     };
     
-    template<typename T>
-    auto Poll<T>::status() -> const Poll::Status & {
-        return stat;
-    }
-    
-    template<typename T>
-    auto Poll<T>::get() -> Output && {
-        return std::move(*value);
-    }
-    
-    template<typename T>
-    auto Poll<T>::operator=(Poll &&other) noexcept -> Poll & {
+    template<typename T, typename S>
+    auto StatusBox<T, S>::operator=(StatusBox &&other) noexcept -> StatusBox & {
         value = other.value;
         stat = other.stat;
         return *this;
     }
+    
+    template<typename T, typename S>
+    auto StatusBox<T, S>::status() -> const Status & {
+        return stat;
+    }
+    
+    template<typename T, typename S>
+    auto StatusBox<T, S>::get() -> Output && {
+        return std::move(*value);
+    }
+    
+    template<typename T, typename S>
+    StatusBox<T, S>::StatusBox(T *value, S stat):value(value), stat(stat) {}
     
     template<typename T>
     auto Future<T>::wait() -> T {
