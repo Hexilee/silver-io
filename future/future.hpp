@@ -13,18 +13,24 @@ namespace sio::future {
     using std::shared_ptr;
     using moodycamel::BlockingConcurrentQueue;
     
+    enum class PollStatus {
+        Pending,
+        Ready,
+    };
+    
     template<typename T>
     class Poll {
         T *value;
-        bool complete;
+        PollStatus stat;
       public:
+        using Status = PollStatus;
         using Output = T;
         
-        Poll() : value(nullptr), complete(false) {};
+        Poll() : value(nullptr), stat(Status::Pending) {};
         
-        explicit Poll(Output &value) : value(&value), complete(true) {};
+        explicit Poll(Output &value) : value(&value), stat(Status::Ready) {};
         auto operator=(Poll &&other) noexcept -> Poll &;
-        auto is_complete() -> bool;
+        auto status() -> const Status &;
         auto get() -> Output &&;
     };
     
@@ -57,8 +63,8 @@ namespace sio::future {
     };
     
     template<typename T>
-    auto Poll<T>::is_complete() -> bool {
-        return complete;
+    auto Poll<T>::status() -> const Poll::Status & {
+        return stat;
     }
     
     template<typename T>
@@ -69,7 +75,7 @@ namespace sio::future {
     template<typename T>
     auto Poll<T>::operator=(Poll &&other) noexcept -> Poll & {
         value = other.value;
-        complete = other.complete;
+        stat = other.stat;
         return *this;
     }
     

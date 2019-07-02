@@ -17,6 +17,7 @@
 #define async sio::coroutine::Asyncer() <<
 namespace sio::coroutine {
     using sio::future::Future;
+    using sio::future::PollStatus;
     using std::function;
     using std::unique_ptr;
     using std::make_unique;
@@ -36,7 +37,7 @@ namespace sio::coroutine {
     template<typename T>
     auto Awaiter::operator<<(sio::future::Future<T> &&f) -> T && {
         auto poll_result = f.poll();
-        while (!poll_result.is_complete()) {
+        while (poll_result.status() == PollStatus::Pending) {
             sio::coroutine::Coroutine<T>::yield();
             poll_result = f.poll();
         }

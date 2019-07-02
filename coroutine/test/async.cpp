@@ -18,7 +18,7 @@ auto async_with_counter_future(uint64_t n) {
     
     uint64_t counter = 0;
     auto poll_result = async_task->poll();
-    while (!poll_result.is_complete()) {
+    while (poll_result.status() == PollStatus::Pending) {
         counter++;
         poll_result = async_task->poll();
     }
