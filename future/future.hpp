@@ -16,6 +16,7 @@ namespace sio::future {
     
     template<typename T, typename S>
     class StatusBox {
+        // must be valid or nullptr
         T *value;
         S stat;
       public:
@@ -26,7 +27,11 @@ namespace sio::future {
         auto get() const -> Output &&;
         
         friend auto operator<<(std::ostream &os, const StatusBox &box) -> std::ostream & {
-            os << "value: " << *box.value << " stat: " << box.stat;
+            if (box.value == nullptr) {
+                os << "value: null, stat: " << box.stat;
+            } else {
+                os << "value: " << *box.value << " stat: " << box.stat;
+            }
             return os;
         };
         

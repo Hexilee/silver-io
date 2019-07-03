@@ -15,9 +15,9 @@ TEST(RangeStreamTest, StreamIter) {
         auto stream = RangeStream<0, 20, 2>();
         auto iter = StreamIter(std::move(stream));
         auto ret = 0;
-        for (auto i: iter) {
+        for (auto i = iter.begin(); i != iter.end(); i++) {
             ret++;
-            std::cout << "i = " << i << std::endl;
+            std::cout << "i = " << *i << std::endl;
         }
         return ret;
     };

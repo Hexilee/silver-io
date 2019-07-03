@@ -48,13 +48,17 @@ namespace sio::future {
     
     template<int64_t From, int64_t To, int64_t Diff>
     auto RangeStream<From, To, Diff>::flow() -> Flow {
+        std::cout << "RangeStream: will ++ counter" << std::endl;
         counter++;
         if (counter >= To) {
+            std::cout << "RangeStream: will return Break" << std::endl;
             return Flow::Break();
         }
         if ((counter - From) % Diff == 0) {
+            std::cout << "RangeStream: will return Continue" << std::endl;
             return Flow(counter);
         }
+        std::cout << "RangeStream: will return Pending" << std::endl;
         return Flow();
     }
     
