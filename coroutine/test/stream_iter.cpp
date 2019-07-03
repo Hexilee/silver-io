@@ -17,7 +17,7 @@ TEST(RangeStreamTest, StreamIter) {
         auto ret = 0;
         for (auto i: iter) {
             ret++;
-            std::cout << i << std::endl;
+            std::cout << "i = " << i << std::endl;
         }
         return ret;
     };

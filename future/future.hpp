@@ -6,6 +6,7 @@
 #define SILVER_IO_FUTURE_HPP
 #include <functional>
 #include <memory>
+#include <iostream>
 #include "future/context.hpp"
 #include "blockingconcurrentqueue.h"
 
@@ -23,6 +24,12 @@ namespace sio::future {
         StatusBox(T *value, S stat);
         auto status() const -> const Status &;
         auto get() const -> Output &&;
+        
+        friend auto operator<<(std::ostream &os, const StatusBox &box) -> std::ostream & {
+            os << "value: " << *box.value << " stat: " << box.stat;
+            return os;
+        };
+        
     };
     
     enum class PollStatus {

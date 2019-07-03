@@ -6,6 +6,7 @@
 #define SILVER_IO_STREAM_ITER_HPP
 #include <iterator>
 #include <memory>
+#include <iostream>
 #include "future/stream.hpp"
 #include "coroutine/coroutine.hpp"
 
@@ -55,7 +56,9 @@ namespace sio::coroutine {
         Stream *stream;
         Flow current_flow;
       public:
-        explicit iterator(Stream &stream) : stream(&stream), current_flow(await_flow(this->stream)) {}
+        explicit iterator(Stream &stream) : stream(&stream), current_flow(await_flow(this->stream)) {
+            std::cout << "initialized iterator, flow: " << current_flow << std::endl;
+        }
         
         iterator(Stream &stream, Flow flow) : stream(&stream), current_flow(flow) {}
         

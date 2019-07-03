@@ -13,6 +13,8 @@ namespace sio::future {
         Break,
     };
     
+    std::ostream &operator<<(std::ostream &os, const FlowStatus &stat);
+    
     template<typename T>
     class Flow: public StatusBox<T, FlowStatus> {
         using Super = StatusBox<T, FlowStatus>;
