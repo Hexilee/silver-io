@@ -10,6 +10,9 @@ namespace sio::generator {
     template<typename T>
     using boost_coroutine = boost::coroutines2::coroutine<T>;
     
+    template <typename T>
+    thread_local typename boost_coroutine<T>::push_type *this_yield = nullptr;
+    
     template<typename Yield, typename Return>
     class Generator;
     
@@ -21,26 +24,22 @@ namespace sio::generator {
         Yield *_yield;
         Resume *_resume;
         R _result;
-        auto set_this_generator() -> void;
+        auto set_this_yield() -> void;
       public:
         explicit Generator(std::function<auto() -> R> &&fn);
         ~Generator();
-        static thread_local Generator<Y, R> *this_generator;
         auto resume() -> Y;
-        auto yield(Y value) -> void;
+        static auto yield(Y value) -> void;
         auto complete(R ret) -> void;
         auto is_complete() -> bool;
         auto result() -> R &;
     };
     
     template<typename Y, typename R>
-    thread_local Generator<Y, R> *Generator<Y, R>::this_generator = nullptr;
-    
-    template<typename Y, typename R>
     Generator<Y, R>::Generator(std::function<auto() -> R> &&fn) {
         _resume = new Resume([=](Yield &yield) {
             _yield = &yield;
-            set_this_generator();
+            set_this_yield();
             complete(fn());
         });
     }
@@ -51,21 +50,21 @@ namespace sio::generator {
     }
     
     template<typename Y, typename R>
-    auto Generator<Y, R>::set_this_generator() -> void {
-        this_generator = this;
+    auto Generator<Y, R>::set_this_yield() -> void {
+        this_yield<Y> = this->_yield;
     }
     
     template<typename Y, typename R>
     auto Generator<Y, R>::resume() -> Y {
         auto ret = _resume->get();
-        set_this_generator();
+        set_this_yield();
         (*_resume)();
         return ret;
     }
     
     template<typename Y, typename R>
     auto Generator<Y, R>::yield(Y value) -> void {
-        (*_yield)(value);
+        (*this_yield<Y>)(value);
     }
     
     template<typename Y, typename R>

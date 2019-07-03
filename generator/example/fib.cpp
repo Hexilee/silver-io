@@ -13,7 +13,7 @@ auto fab(int n) {
     return new Generator<int, int>([=] {
         int a = 0, b = 1, next;
         for (int i = 0; i < n; i++) {
-            Generator<int, int>::this_generator->yield(a);
+            Generator<int, int>::yield(a);
             next = a + b;
             a = b;
             b = next;

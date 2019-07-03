@@ -6,7 +6,6 @@
 #define SILVER_IO_STREAM_ITER_HPP
 #include <iterator>
 #include <memory>
-#include <iostream>
 #include "future/stream.hpp"
 #include "coroutine/coroutine.hpp"
 
@@ -43,13 +42,10 @@ namespace sio::coroutine {
     
     template<typename T>
     auto StreamIter<T>::await_flow(Stream *stream) -> Flow {
-        std::cout << "will await new flow, stream: " << stream << std::endl;
         auto flow = stream->flow();
-        std::cout << "await new flow: " << flow << std::endl;
         while (flow.status() == FlowStatus::Pending) {
             Coroutine<T>::yield();
             flow = stream->flow();
-            std::cout << "await new flow: " << flow << std::endl;
         }
         return flow;
     }
@@ -60,16 +56,12 @@ namespace sio::coroutine {
         Flow current_flow;
       public:
         explicit iterator(Stream *stream) : stream(stream), current_flow(await_flow(stream)) {
-            std::cout << "initialized iterator, stream: " << this->stream << std::endl;
-            std::cout << "initialized iterator, flow: " << current_flow << std::endl;
         }
         
         iterator(Stream *stream, Flow flow) : stream(stream), current_flow(flow) {}
         
         auto operator++() -> iterator & {
-            std::cout << "will ++ iterator, flow: " << current_flow << std::endl;
             current_flow = await_flow(stream);
-            std::cout << "++ iterator, flow: " << current_flow << std::endl;
             return *this;
         }
         
