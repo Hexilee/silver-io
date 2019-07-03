@@ -13,13 +13,13 @@ An asynchronous IO library which is the easiest to use for cpp. Inspired by Futu
         - [ ] spawn
 - [x] generator (stackful, segmented stack, based on boost::coroutine2)
     - [x] Generator
-- [ ] coroutine (based on generator)
-    - [ ] async
+- [x] coroutine (based on generator)
+    - [x] async
         - [x] async closure
-        - [ ] async function
-    - [ ] await
+        - [x] async function
+    - [x] await
         - [x] await Future
-        - [ ] await Stream
+        - [x] await Stream
 - [ ] sio (core io runtime, based on libuv and uvw)
     - [ ] multi-thread runtime
         - [ ] specialize common multi-thread runtime

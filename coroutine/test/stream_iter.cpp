@@ -14,7 +14,7 @@ template<int64_t From, int64_t To, int64_t Diff = 1>
 auto rang_stream_to_iter() {
     auto iter_future = async [] {
         auto stream = RangeStream<From, To, Diff>();
-        auto iter = StreamIter(std::move(stream));
+        auto iter = StreamIter(stream);
         auto ret = 0;
         for (auto i: iter) {
             EXPECT_EQ(ret * Diff + From, i);

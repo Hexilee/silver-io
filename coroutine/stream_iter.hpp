@@ -21,7 +21,7 @@ namespace sio::coroutine {
       public:
         using Stream = Stream<T>;
         using Flow = Flow<T>;
-        explicit StreamIter(Stream &&stream);
+        explicit StreamIter(Stream &stream);
         static auto await_flow(Stream *stream) -> Flow;
         
         class iterator;
@@ -71,14 +71,14 @@ namespace sio::coroutine {
             return retval;
         }
         
-        auto operator==(const iterator& other) const { return current_flow.status() == other.current_flow.status(); }
+        auto operator==(const iterator &other) const { return current_flow.status() == other.current_flow.status(); }
         
-        auto operator!=(const iterator& other) const { return !(*this == other); }
+        auto operator!=(const iterator &other) const { return !(*this == other); }
         
         auto operator*() const -> T && { return current_flow.get(); }
     };
     
     template<typename T>
-    StreamIter<T>::StreamIter(Stream &&stream):stream(stream) {}
+    StreamIter<T>::StreamIter(Stream &stream):stream(stream) {}
 }
 #endif //SILVER_IO_STREAM_ITER_HPP

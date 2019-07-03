@@ -10,13 +10,16 @@
 #include <memory>
 #include <type_traits>
 #include "future/future.hpp"
+#include "future/stream.hpp"
 #include "coroutine/coroutine.hpp"
 #include "coroutine/co_future.hpp"
+#include "coroutine/stream_iter.hpp"
 
 #define await sio::coroutine::Awaiter() <<
 #define async sio::coroutine::Asyncer() <<
 namespace sio::coroutine {
     using sio::future::Future;
+    using sio::future::Stream;
     using sio::future::PollStatus;
     using std::function;
     using std::unique_ptr;
@@ -26,6 +29,9 @@ namespace sio::coroutine {
       public:
         template<typename T>
         auto operator<<(Future<T> &&f) -> T &&;
+        
+        template<typename T>
+        auto operator<<(Stream<T> &&s) -> StreamIter<T>;
     };
     
     class Asyncer {
@@ -42,6 +48,11 @@ namespace sio::coroutine {
             poll_result = f.poll();
         }
         return poll_result.get();
+    }
+    
+    template<typename T>
+    auto Awaiter::operator<<(Stream<T> &&s) -> StreamIter<T> {
+        return StreamIter<T>(s);
     }
     
     template<typename Fn, typename T>
