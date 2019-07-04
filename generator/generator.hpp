@@ -9,8 +9,7 @@
 namespace sio::generator {
     template<typename T>
     using boost_coroutine = boost::coroutines2::coroutine<T>;
-    
-    template <typename T>
+    template<typename T>
     thread_local typename boost_coroutine<T>::push_type *this_yield = nullptr;
     
     template<typename Yield, typename Return>
@@ -22,12 +21,11 @@ namespace sio::generator {
         using Resume = typename boost_coroutine<Y>::pull_type;
         // managed by _resume
         Yield *_yield;
-        Resume *_resume;
+        Resume _resume;
         R _result;
         auto set_this_yield() -> void;
       public:
         explicit Generator(std::function<auto() -> R> &&fn);
-        ~Generator();
         auto resume() -> Y;
         static auto yield(Y value) -> void;
         auto complete(R ret) -> void;
@@ -36,17 +34,12 @@ namespace sio::generator {
     };
     
     template<typename Y, typename R>
-    Generator<Y, R>::Generator(std::function<auto() -> R> &&fn) {
-        _resume = new Resume([=](Yield &yield) {
-            _yield = &yield;
-            set_this_yield();
-            complete(fn());
-        });
-    }
+    Generator<Y, R>::Generator(std::function<auto() -> R> &&fn): _resume(Resume([=](Yield &yield) {
+        _yield = &yield;
+        set_this_yield();
+        complete(fn());
+    })) {
     
-    template<typename Y, typename R>
-    Generator<Y, R>::~Generator() {
-        delete _resume;
     }
     
     template<typename Y, typename R>
@@ -56,9 +49,9 @@ namespace sio::generator {
     
     template<typename Y, typename R>
     auto Generator<Y, R>::resume() -> Y {
-        auto ret = _resume->get();
+        auto ret = _resume.get();
         set_this_yield();
-        (*_resume)();
+        _resume();
         return ret;
     }
     
@@ -74,7 +67,7 @@ namespace sio::generator {
     
     template<typename Y, typename R>
     auto Generator<Y, R>::is_complete() -> bool {
-        return !(*_resume);
+        return !_resume;
     }
     
     template<typename Y, typename R>
