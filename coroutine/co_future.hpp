@@ -12,20 +12,31 @@ namespace sio::coroutine {
     using sio::future::Future;
     using sio::future::Poll;
     using std::function;
-    template <typename T>
-    class CoFuture: public Future<T>, Coroutine<T> {
+    
+    template<typename Fn>
+    class CoFuture;
+    
+    template<typename Fn>
+    using Ret = typename std::result_of<Fn(void)>::type;
+    
+    template<typename Fn>
+    class CoFuture
+    : public Future<Ret<Fn>>, Coroutine<Ret<Fn>> {
       public:
-        explicit CoFuture(std::function<auto () -> T>&& fn);
-        auto poll() -> Poll<T> override;
+        explicit CoFuture(Fn &&fn);
+        auto poll() -> Poll<Ret<Fn>> override;
     };
     
-    template<typename T>
-    auto CoFuture<T>::poll() -> Poll<T> {
+    template<typename Fn>
+    auto CoFuture<Fn>::poll() -> Poll<Ret<Fn>> {
         this->resume();
-        return this->is_complete() ? Poll(this->result()) : Poll<T>();
+        return this->is_complete() ? Poll(this->result()) : Poll<Ret<Fn>>();
     }
     
-    template<typename T>
-    CoFuture<T>::CoFuture(std::function<auto () -> T>&& fn): Coroutine<T>(std::move(fn)) {}
+    template<typename Fn>
+    CoFuture<Fn>::CoFuture(Fn &&fn): Coroutine<Ret<Fn>>(static_cast<std::function<Ret<Fn>()>>([=] {
+        Coroutine<Ret<Fn>>::yield();
+        return fn();
+    })) {}
 }
 #endif //SILVER_IO_CO_FUTURE_HPP

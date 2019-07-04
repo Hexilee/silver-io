@@ -56,9 +56,8 @@ namespace sio::coroutine {
     }
     
     template<typename Fn>
-    auto Asyncer::operator<<(Fn &&lambda) -> unique_ptr<Future<typename std::result_of<Fn(void)>::type>> {
-        using T = typename std::result_of<Fn(void)>::type;
-        return make_unique<CoFuture<T> >(static_cast<function<auto() -> T>>(lambda));
+    auto Asyncer::operator<<(Fn &&lambda) -> unique_ptr<Future<Ret<Fn>>> {
+        return make_unique<CoFuture<Fn> >(std::forward<Fn>(lambda));
     }
 }
 #endif //SILVER_IO_ASYNC_HPP
