@@ -36,8 +36,8 @@ namespace sio::coroutine {
     
     class Asyncer {
       public:
-        template<typename Fn, typename T = typename std::result_of<Fn(void)>::type>
-        auto operator<<(Fn &&lambda) -> unique_ptr<Future<T>>;
+        template<typename Fn>
+        auto operator<<(Fn &&lambda) -> unique_ptr<Future<typename std::result_of<Fn(void)>::type>>;
     };
     
     template<typename T>
@@ -55,8 +55,9 @@ namespace sio::coroutine {
         return StreamIter<T>(s);
     }
     
-    template<typename Fn, typename T>
-    auto Asyncer::operator<<(Fn &&lambda) -> unique_ptr<Future<T>> {
+    template<typename Fn>
+    auto Asyncer::operator<<(Fn &&lambda) -> unique_ptr<Future<typename std::result_of<Fn(void)>::type>> {
+        using T = typename std::result_of<Fn(void)>::type;
         return make_unique<CoFuture<T> >(static_cast<function<auto() -> T>>(lambda));
     }
 }
