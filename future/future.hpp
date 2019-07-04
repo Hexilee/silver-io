@@ -24,7 +24,7 @@ namespace sio::future {
         using Output = T;
         StatusBox(T *value, S stat);
         auto status() const -> const Status &;
-        auto get() const -> Output &&;
+        auto get() const -> Output &;
         
         friend auto operator<<(std::ostream &os, const StatusBox &box) -> std::ostream & {
             if (box.value == nullptr) {
@@ -85,8 +85,8 @@ namespace sio::future {
     }
     
     template<typename T, typename S>
-    auto StatusBox<T, S>::get() const -> Output && {
-        return std::move(*value);
+    auto StatusBox<T, S>::get() const -> Output & {
+        return *value;
     }
     
     template<typename T, typename S>

@@ -51,7 +51,7 @@ namespace sio::coroutine {
     }
     
     template<typename T>
-    class StreamIter<T>::iterator: public std::iterator<std::input_iterator_tag, T, ptrdiff_t, T *, T &&> {
+    class StreamIter<T>::iterator: public std::iterator<std::input_iterator_tag, T> {
         Stream *stream;
         Flow current_flow;
       public:
@@ -75,7 +75,7 @@ namespace sio::coroutine {
         
         auto operator!=(const iterator &other) const { return !(*this == other); }
         
-        auto operator*() const -> T && { return current_flow.get(); }
+        auto operator*() const -> T & { return current_flow.get(); }
     };
     
     template<typename T>
