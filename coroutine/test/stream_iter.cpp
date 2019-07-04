@@ -29,7 +29,7 @@ auto rang_stream_to_iter() {
         poll_result = iter_future->poll();
     }
     EXPECT_EQ((To - 1 - From) / Diff + 1, poll_result.get()); // continue times
-    EXPECT_EQ(To - From - 1 - poll_result.get(), counter); //pending times = total times - continue times
+    EXPECT_EQ(To - From - poll_result.get(), counter); //pending times = total times - continue times
 }
 
 TEST(RangeStreamTest, StreamIter) {
