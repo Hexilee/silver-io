@@ -43,7 +43,7 @@ namespace sio {
     
     template<typename T>
     auto Result<T>::operator=(Result &&other) noexcept -> Result & {
-        this->value.swap(other.value);
+        this->value = std::move(other.value);
         this->status_code = other.status_code;
         return *this;
     }
