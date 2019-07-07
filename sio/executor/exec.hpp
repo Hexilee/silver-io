@@ -9,8 +9,8 @@
 #include "coroutine/async.hpp"
 #include <type_traits>
 #include <memory>
-#define block_on sio::executor::Blocker() <<
 
+#define block_on sio::executor::Blocker() <<
 namespace sio::executor {
     using namespace sio;
     using namespace future;
@@ -18,9 +18,6 @@ namespace sio::executor {
     
     class Blocker {
       public:
-        template<typename T>
-        auto operator<<(const Future<T> &main_task) -> T &;
-        
         template<typename T>
         auto operator<<(Future<T> &&main_task) -> T &;
         
@@ -30,11 +27,6 @@ namespace sio::executor {
         template<class T>
         auto operator<<(std::unique_ptr<Future<T>> &&main_task) -> T;
     };
-    
-    template<class T>
-    auto Blocker::operator<<(const Future<T> &main_task) -> T & {
-        return this << std::move(main_task);
-    }
     
     template<class T>
     auto Blocker::operator<<(Future<T> &&main_task) -> T & {
@@ -52,7 +44,7 @@ namespace sio::executor {
     
     template<class T>
     auto Blocker::operator<<(unique_ptr<Future<T>> &&main_task) -> T {
-        return this << *main_task;
+        return this << std::move(*main_task);
     }
     
 }
