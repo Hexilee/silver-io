@@ -17,11 +17,15 @@ cc_library(
     ],
     deps = [
         "//future:sio_future",
+        "//coroutine:sio_coroutine",
         "@uvw//:uvw",
         "@concurrentqueue//:concurrentqueue",
     ],
     copts = [
         "-std=c++17"
+    ],
+    linkopts = [
+        "-lboost_coroutine"
     ],
 )
 
