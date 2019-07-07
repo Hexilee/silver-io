@@ -19,12 +19,12 @@ namespace sio::fs {
     using OpenFlags = uvw::details::UVFileOpenFlags;
     
     class File {
-        uvw::FileReq &req;
       public:
+        uvw::FileReq &req;
         explicit File(uvw::FileReq &req);
     };
     
-    class OpenFileFuture: Future<Result<File>> {
+    class OpenFileFuture: public Future<Result<File>> {
         const char *path;
         Flags<OpenFlags> flags;
         int mode;

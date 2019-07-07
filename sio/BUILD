@@ -24,8 +24,22 @@ cc_library(
     copts = [
         "-std=c++17"
     ],
+    visibility = ["//visibility:public"],
+)
+
+
+cc_binary(
+    name = "block_on",
+    srcs = glob([
+        "example/block_on.cpp",
+    ]),
+    deps = [
+        "//sio:sio",
+    ],
+    copts = [
+        "-std=c++17"
+    ],
     linkopts = [
         "-lboost_coroutine"
     ],
 )
-
