@@ -28,9 +28,9 @@ namespace sio::generator {
         explicit Generator(std::function<auto() -> R> &&fn);
         auto resume() -> Y;
         static auto yield(Y value) -> void;
-        auto complete(R ret) -> void;
+        auto complete(R &&ret) -> void;
         auto is_complete() -> bool;
-        auto result() -> R &;
+        auto result() -> R &&;
     };
     
     template<typename Y, typename R>
@@ -61,7 +61,7 @@ namespace sio::generator {
     }
     
     template<typename Y, typename R>
-    auto Generator<Y, R>::complete(R ret) -> void {
+    auto Generator<Y, R>::complete(R &&ret) -> void {
         _result = ret;
     }
     
@@ -71,8 +71,8 @@ namespace sio::generator {
     }
     
     template<typename Y, typename R>
-    auto Generator<Y, R>::result() -> R & {
-        return _result;
+    auto Generator<Y, R>::result() -> R && {
+        return std::move(_result);
     }
 }
 #endif //SILVER_IO_GENERATOR_HPP
