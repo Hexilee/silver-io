@@ -8,6 +8,8 @@
 
 namespace sio::coroutine {
     using sio::generator::Generator;
+    
+    // TODO: replace with std::monostate
     enum Context {
         Hup
     };

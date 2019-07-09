@@ -7,6 +7,7 @@
 #include <functional>
 #include <memory>
 #include <iostream>
+#include <variant>
 #include "future/context.hpp"
 #include "blockingconcurrentqueue.h"
 
@@ -94,13 +95,12 @@ namespace sio::future {
     
     template<typename T>
     auto Future<T>::wait() -> T & {
-        class Signal;
-        BlockingConcurrentQueue<Signal> channel;
+        BlockingConcurrentQueue<std::monostate> channel;
         ThreadLocalContext = make_shared<FuncContext>([&channel]() {
-            channel.enqueue(Signal());
+            channel.enqueue(std::monostate());
         });
         auto poll_result = poll();
-        auto signal = Signal();
+        auto signal = std::monostate();
         while (poll_result.status() == PollStatus::Pending) {
             channel.wait_dequeue(signal);
             poll_result = poll();
