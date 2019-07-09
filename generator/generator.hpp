@@ -62,7 +62,7 @@ namespace sio::generator {
     
     template<typename Y, typename R>
     auto Generator<Y, R>::complete(R &&ret) -> void {
-        _result = ret;
+        _result = std::forward<R>(ret);
     }
     
     template<typename Y, typename R>

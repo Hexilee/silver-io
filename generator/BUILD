@@ -41,3 +41,21 @@ cc_binary(
     ],
 )
 
+cc_test(
+    name = "test",
+    size = "small",
+    srcs = glob([
+        "test/*.cpp",
+    ]),
+    deps = [
+        "@gtest//:gtest_main",
+        "sio_generator"
+    ],
+    linkopts = [
+        "-lboost_coroutine"
+    ],
+    copts = [
+        "-std=c++17"
+    ],
+)
+
