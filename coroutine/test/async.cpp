@@ -23,7 +23,7 @@ auto async_with_counter_future(uint64_t n) {
         poll_result = async_task->poll();
     }
     EXPECT_EQ(n * n, counter);
-    EXPECT_EQ(n * n, poll_result.get());
+    EXPECT_EQ(n * n, poll_result.release());
 }
 
 TEST(AsyncCounterFuture, AsyncTest) {

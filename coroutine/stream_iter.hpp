@@ -22,7 +22,7 @@ namespace sio::coroutine {
         using Stream = Stream<T>;
         using Flow = Flow<T>;
         explicit StreamIter(Stream &stream);
-        static auto await_flow(Stream *stream) -> Flow;
+        static auto await_flow(Stream *stream) -> Flow &&;
         
         class iterator;
         
@@ -41,24 +41,24 @@ namespace sio::coroutine {
     }
     
     template<typename T>
-    auto StreamIter<T>::await_flow(Stream *stream) -> Flow {
+    auto StreamIter<T>::await_flow(Stream *stream) -> Flow && {
         auto flow = stream->flow();
         while (flow.status() == FlowStatus::Pending) {
             Coroutine<T>::yield();
             flow = stream->flow();
         }
-        return flow;
+        return std::move(flow);
     }
     
     template<typename T>
-    class StreamIter<T>::iterator: public std::iterator<std::input_iterator_tag, T> {
+    class StreamIter<T>::iterator: public std::iterator<std::input_iterator_tag, T, ptrdiff_t, T *, T &&> {
         Stream *stream;
         Flow current_flow;
       public:
         explicit iterator(Stream *stream) : stream(stream), current_flow(await_flow(stream)) {
         }
         
-        iterator(Stream *stream, Flow flow) : stream(stream), current_flow(flow) {}
+        iterator(Stream *stream, Flow &&flow) : stream(stream), current_flow(flow) {}
         
         auto operator++() -> iterator & {
             current_flow = await_flow(stream);
@@ -75,7 +75,7 @@ namespace sio::coroutine {
         
         auto operator!=(const iterator &other) const { return !(*this == other); }
         
-        auto operator*() const -> T & { return current_flow.release(); }
+        auto operator*() -> T && { return current_flow.release(); }
     };
     
     template<typename T>

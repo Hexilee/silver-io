@@ -36,8 +36,9 @@ auto async_stream() {
         counter++;
         poll_result = iter_future->poll();
     }
-    EXPECT_EQ((To - 1 - From) / Diff + 1, poll_result.get()); // continue times
-    EXPECT_EQ(To - From - poll_result.get(), counter); //pending times = total times - continue times
+    auto result = poll_result.release();
+    EXPECT_EQ((To - 1 - From) / Diff + 1, result); // continue times
+    EXPECT_EQ(To - From - result, counter); //pending times = total times - continue times
 }
 
 TEST(RangeStream, AwaitStreamTest) {
