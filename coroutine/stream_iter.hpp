@@ -75,7 +75,7 @@ namespace sio::coroutine {
         
         auto operator!=(const iterator &other) const { return !(*this == other); }
         
-        auto operator*() const -> T & { return current_flow.get(); }
+        auto operator*() const -> T & { return current_flow.release(); }
     };
     
     template<typename T>

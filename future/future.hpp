@@ -13,26 +13,23 @@
 
 namespace sio::future {
     using std::shared_ptr;
+    using std::unique_ptr;
     using moodycamel::BlockingConcurrentQueue;
     
     template<typename T, typename S>
     class StatusBox {
-        // must be valid or nullptr
-        T *value;
+        T value;
         S stat;
       public:
         using Status = S;
         using Output = T;
-        StatusBox(T *value, S stat);
+        explicit StatusBox(S stat); // T need default constructor
+        StatusBox(T &&value, S stat);
         auto status() const -> const Status &;
-        auto get() const -> Output &;
+        auto release() -> Output &&;
         
         friend auto operator<<(std::ostream &os, const StatusBox &box) -> std::ostream & {
-            if (box.value == nullptr) {
-                os << "value: null, stat: " << box.stat;
-            } else {
-                os << "value: " << *box.value << " stat: " << box.stat;
-            }
+            os << "value: " << box.value << " stat: " << box.stat;
             return os;
         };
         
@@ -47,15 +44,15 @@ namespace sio::future {
     class Poll: public StatusBox<T, PollStatus> {
         using Super = StatusBox<T, PollStatus>;
       public:
-        Poll() : Super(nullptr, PollStatus::Pending) {};
+        Poll() : Super(PollStatus::Pending) {};
         
-        explicit Poll(T &value) : Super(&value, PollStatus::Ready) {};
+        explicit Poll(T &&value) : Super(std::forward<T>(value), PollStatus::Ready) {};
     };
     
     template<typename T>
     class Future {
       public:
-        auto wait() -> T &;
+        auto wait() -> T &&;
         virtual auto poll() -> Poll<T> = 0;
         virtual ~Future() = default;
     };
@@ -64,7 +61,6 @@ namespace sio::future {
     class FutureOk: public Future<T> {
         T value;
       public:
-        explicit FutureOk(const T &value);
         explicit FutureOk(T &&value);
         auto poll() -> Poll<T> override;
     };
@@ -86,15 +82,18 @@ namespace sio::future {
     }
     
     template<typename T, typename S>
-    auto StatusBox<T, S>::get() const -> Output & {
-        return *value;
+    auto StatusBox<T, S>::release() -> Output && {
+        return std::move(value);
     }
     
     template<typename T, typename S>
-    StatusBox<T, S>::StatusBox(T *value, S stat):value(value), stat(stat) {}
+    StatusBox<T, S>::StatusBox(T &&value, S stat):value(value), stat(stat) {}
+    
+    template<typename T, typename S>
+    StatusBox<T, S>::StatusBox(S stat): stat(stat) {}
     
     template<typename T>
-    auto Future<T>::wait() -> T & {
+    auto Future<T>::wait() -> T && {
         BlockingConcurrentQueue<std::monostate> channel;
         ThreadLocalContext = make_shared<FuncContext>([&channel]() {
             channel.enqueue(std::monostate());
@@ -105,23 +104,20 @@ namespace sio::future {
             channel.wait_dequeue(signal);
             poll_result = poll();
         }
-        return poll_result.get();
+        return poll_result.release();
     }
     
     template<typename T>
     auto FutureOk<T>::poll() -> Poll<T> {
-        return Poll(value);
+        return Poll(std::move(value));
     }
     
     template<typename T>
     FutureOk<T>::FutureOk(T &&value):value(value) {}
     
     template<typename T>
-    FutureOk<T>::FutureOk(const T &value):value(value) {}
-    
-    template<typename T>
     auto CounterFuture<T>::poll() -> Poll<T> {
-        return counter++ >= ceiling ? Poll(value) : Poll<T>();
+        return counter++ >= ceiling ? Poll(std::move(value)) : Poll<T>();
     }
 }
 #endif //SILVER_IO_FUTURE_HPP

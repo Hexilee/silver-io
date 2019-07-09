@@ -19,15 +19,13 @@ namespace sio::future {
     class Flow: public StatusBox<T, FlowStatus> {
         using Super = StatusBox<T, FlowStatus>;
         
-        explicit Flow(FlowStatus stat) : Super(nullptr, stat) {};
+        explicit Flow(FlowStatus status) : Super(status) {};
       public:
-        Flow() : Flow(FlowStatus::Pending) {};
+        explicit Flow() : Flow(FlowStatus::Pending) {};
         
-        explicit Flow(T &value) : Super(&value, FlowStatus::Continue) {};
+        explicit Flow(T &&value) : Super(std::forward<T>(value), FlowStatus::Continue) {};
         
-        static auto Break() -> Flow {
-            return Flow(FlowStatus::Break);
-        }
+        static auto Break() { return Flow(FlowStatus::Break); }
     };
     
     template<typename T>
@@ -53,7 +51,7 @@ namespace sio::future {
             return Flow::Break();
         }
         if ((counter - From) % Diff == 0) {
-            return Flow(counter);
+            return Flow(std::move(counter));
         }
         return Flow();
     }

@@ -47,7 +47,7 @@ namespace sio::coroutine {
             sio::coroutine::Coroutine<T>::yield();
             poll_result = f.poll();
         }
-        return poll_result.get();
+        return poll_result.release();
     }
     
     template<typename T>

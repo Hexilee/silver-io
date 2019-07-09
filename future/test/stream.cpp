@@ -13,7 +13,7 @@ TEST(RangeStreamTest, RangeStream) {
         auto flow = stream.flow();
         if (i % 2 == 0) {
             EXPECT_EQ(FlowStatus::Continue, flow.status());
-            EXPECT_EQ(i, flow.get());
+            EXPECT_EQ(i, flow.release());
         } else {
             EXPECT_EQ(FlowStatus::Pending, flow.status());
         }
