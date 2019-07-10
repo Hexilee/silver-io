@@ -71,7 +71,7 @@ namespace sio::future {
         uint64_t counter;
         uint64_t ceiling;
       public:
-        CounterFuture(T value, uint64_t ceiling) : value(value), counter(0), ceiling(ceiling) {}
+        CounterFuture(T &&value, uint64_t ceiling) : value(std::forward<T>(value)), counter(0), ceiling(ceiling) {}
         
         auto poll() -> Poll<T> override;
     };
@@ -87,7 +87,7 @@ namespace sio::future {
     }
     
     template<typename T, typename S>
-    StatusBox<T, S>::StatusBox(T &&value, S stat):value(value), stat(stat) {}
+    StatusBox<T, S>::StatusBox(T &&value, S stat):value(std::forward<T>(value)), stat(stat) {}
     
     template<typename T, typename S>
     StatusBox<T, S>::StatusBox(S stat): stat(stat) {}
@@ -113,7 +113,7 @@ namespace sio::future {
     }
     
     template<typename T>
-    FutureOk<T>::FutureOk(T &&value):value(value) {}
+    FutureOk<T>::FutureOk(T &&value):value(std::forward<T>(value)) {}
     
     template<typename T>
     auto CounterFuture<T>::poll() -> Poll<T> {
