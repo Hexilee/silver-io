@@ -7,7 +7,7 @@
 
 using namespace sio::future;
 
-TEST(RangeStreamTest, RangeStream) {
+TEST(RangeStream, StreamTest) {
     auto stream = RangeStream<0, 100, 2>();
     for (auto i = 0; i < 100; i++) {
         auto flow = stream.flow();

@@ -8,13 +8,13 @@
 
 using namespace sio::future;
 
-TEST(PollNormal, Poll) {
+TEST(Poll, StatusBoxTest) {
     EXPECT_EQ(1, Poll(1).release());
     EXPECT_EQ(PollStatus::Ready, Poll(1).status());
     EXPECT_EQ(PollStatus::Pending, Poll<int>().status());
 }
 
-TEST(FlowNormal, Flow) {
+TEST(Flow, StatusBoxTest) {
     EXPECT_EQ(1, Flow(1).release());
     EXPECT_EQ(FlowStatus::Continue, Flow(1).status());
     EXPECT_EQ(FlowStatus::Pending, Flow<int>().status());
