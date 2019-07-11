@@ -19,7 +19,7 @@ namespace sio::executor {
     class Blocker {
       public:
         template<typename T>
-        auto operator<<(Future<T> &&main_task) -> T &;
+        auto operator<<(Future<T> &&main_task) -> T;
         
         template<typename Fn>
         auto operator<<(Fn &&main_task) -> Ret<Fn>;
@@ -29,12 +29,12 @@ namespace sio::executor {
     };
     
     template<class T>
-    auto Blocker::operator<<(Future<T> &&main_task) -> T & {
+    auto Blocker::operator<<(Future<T> &&main_task) -> T {
         auto loop_thread = init_event_loop();
         auto result = main_task.wait();
         EventLoop->stop();
         loop_thread->join();
-        return result;
+        return std::move(result);
     }
     
     template<class Fn>

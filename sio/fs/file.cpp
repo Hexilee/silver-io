@@ -25,7 +25,7 @@ auto OpenFileFuture::poll() -> Poll<Result<File>> {
         is_register = true;
     }
     if (queue.try_dequeue(file_result)) {
-        return Poll(file_result);
+        return Poll(std::move(file_result));
     } else {
         return Poll<Result<File>>();
     }

@@ -52,7 +52,7 @@ namespace sio::future {
     template<typename T>
     class Future {
       public:
-        auto wait() -> T &&;
+        auto wait() -> T;
         virtual auto poll() -> Poll<T> = 0;
         virtual ~Future() = default;
     };
@@ -93,7 +93,7 @@ namespace sio::future {
     StatusBox<T, S>::StatusBox(S stat): stat(stat) {}
     
     template<typename T>
-    auto Future<T>::wait() -> T && {
+    auto Future<T>::wait() -> T {
         BlockingConcurrentQueue<std::monostate> channel;
         ThreadLocalContext = make_shared<FuncContext>([&channel]() {
             channel.enqueue(std::monostate());
