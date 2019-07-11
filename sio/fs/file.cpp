@@ -14,7 +14,7 @@ auto OpenFileFuture::poll() -> Poll<Result<File>> {
     if (!is_register) {
         auto open_resource = EventLoop->resource<FileReq>();
         open_resource->once<ErrorEvent>([this, context = future::ThreadLocalContext](const ErrorEvent &event, FileReq &file) {
-            spdlog::debug("open_resource on ErrorEvent {:s}", event.what());
+            spdlog::error("open_resource on ErrorEvent {:s}", event.what());
             queue.enqueue(Result<File>(unique_ptr<File>(nullptr), event.code()));
             context->wake();
         });

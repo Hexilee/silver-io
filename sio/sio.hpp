@@ -4,9 +4,12 @@
 
 #ifndef SILVER_IO_SIO_HPP
 #define SILVER_IO_SIO_HPP
-#include "future/future.hpp"
 #include <thread>
+#include <sstream>
+#include "future/future.hpp"
 #include "uvw.hpp"
+#include "spdlog/spdlog.h"
+
 
 namespace sio {
     using std::thread;

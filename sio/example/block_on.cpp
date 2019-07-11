@@ -5,9 +5,9 @@
 #include "sio/fs/file.hpp"
 #include "spdlog/spdlog.h"
 
-auto main() -> int {
+auto main(int argc, char *argv[]) -> int {
     spdlog::set_level(spdlog::level::debug);
-    auto file = block_on sio::fs::open(".gitignore");
+    auto file = block_on sio::fs::open(argv[1]);
     if (!file.is_ok()) {
         auto status = file.get_status();
         spdlog::error("open file fail: {:s}", status.what());

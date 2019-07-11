@@ -9,5 +9,6 @@ thread_local auto sio::EventLoop = uvw::Loop::create();
 auto sio::init_event_loop() -> std::unique_ptr<thread> {
     return make_unique<thread>([event_loop = sio::EventLoop]() {
         event_loop->run();
+        spdlog::debug("thread {:s}: event loop stop", (std::stringstream() << std::this_thread::get_id()).str());
     });
 }

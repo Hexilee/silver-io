@@ -44,3 +44,17 @@ cc_binary(
         "-lboost_coroutine"
     ],
 )
+
+cc_binary(
+    name = "uvw_read_file",
+    srcs = glob([
+        "example/uvw_read_file.cpp",
+    ]),
+    deps = [
+        "@uvw//:uvw",
+        "@spdlog//:spdlog",
+    ],
+    copts = [
+        "-std=c++17"
+    ],
+)
