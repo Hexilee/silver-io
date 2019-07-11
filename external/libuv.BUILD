@@ -1,13 +1,18 @@
-UV_COMMON_SOURCES = [
-  "include/uv/unix.h",
-  "include/uv/linux.h",
-  "include/uv/sunos.h",
-  "include/uv/darwin.h",
-  "include/uv/bsd.h",
-  "include/uv/aix.h",
-] + glob(["src/*.c", "src/*.h"])
+UV_COMMON_SOURCES = glob(["src/*.c", "src/*.h"])
+UV_COMMON_HEADERS = [
+    "include/uv.h",
+    "include/uv/errno.h",
+    "include/uv/threadpool.h",
+    "include/uv/version.h",
+    "include/uv/tree.h",
+]
 
-UV_UNIX_SOURCES = [
+UV_WIN_SOURCES = UV_COMMON_SOURCES + glob(["src/win/*.c", "src/win/*.h"])
+UV_WIN_HEADERS = UV_COMMON_HEADERS + [
+    "include/uv/win.h",
+]
+
+UV_UNIX_SOURCES = UV_COMMON_SOURCES + [
   "src/unix/async.c",
   "src/unix/atomic-ops.h",
   "src/unix/core.c",
@@ -30,7 +35,11 @@ UV_UNIX_SOURCES = [
   "src/unix/udp.c",
 ]
 
-UV_DARWIN_SOURCES = [
+UV_UNIX_HEADERS = UV_COMMON_HEADERS + [
+    "include/uv/unix.h",
+]
+
+UV_DARWIN_SOURCES = UV_UNIX_SOURCES + [
   "src/unix/bsd-ifaddrs.c",
   "src/unix/darwin.c",
   "src/unix/darwin-proctitle.c",
@@ -39,7 +48,24 @@ UV_DARWIN_SOURCES = [
   "src/unix/proctitle.c",
 ]
 
-UV_LINUX_SOURCES = [
+UV_DARWIN_HEADERS = UV_UNIX_HEADERS + [
+    "include/uv/darwin.h",
+]
+
+UV_BSD_SOURCES = UV_UNIX_SOURCES + [
+  "src/unix/bsd-ifaddrs.c",
+  "src/unix/bsd-proctitle.c",
+  "src/unix/freebsd.c",
+  "src/unix/kqueue.c",
+  "src/unix/posix-hrtime.c",
+]
+
+UV_BSD_HEADERS = UV_UNIX_HEADERS + [
+    "include/uv/bsd.h",
+]
+
+
+UV_LINUX_SOURCES = UV_UNIX_SOURCES + [
     "src/unix/linux-core.c",
     "src/unix/linux-inotify.c",
     "src/unix/linux-syscalls.c",
@@ -47,26 +73,51 @@ UV_LINUX_SOURCES = [
     "src/unix/procfs-exepath.c",
     "src/unix/proctitle.c",
     "src/unix/sysinfo-loadavg.c",
-    "src/unix/sysinfo-memory.c",
 ]
+
+UV_LINUX_HEADERS = UV_UNIX_HEADERS + [
+    "include/uv/linux.h",
+]
+
+UV_MSYS_SOURCES = UV_UNIX_SOURCES + [
+    "src/unix/cygwin.c",
+    "src/unix/bsd-ifaddrs.c",
+    "src/unix/no-fsevents.c",
+    "src/unix/no-proctitle.c",
+    "src/unix/posix-hrtime.c",
+    "src/unix/posix-poll.c",
+    "src/unix/procfs-exepath.c",
+    "src/unix/sysinfo-loadavg.c",
+    "src/unix/sysinfo-memory",
+]
+
+UV_MSYS_HEADERS = UV_UNIX_HEADERS
+
 
 cc_library(
   name = "uv",
-  srcs = UV_COMMON_SOURCES + select({
-    "@bazel_tools//src/conditions:darwin": UV_UNIX_SOURCES + UV_DARWIN_SOURCES,
-    # FIXME: Figure out the right way to detect linux and windows.
-    "//conditions:default": UV_UNIX_SOURCES + UV_LINUX_SOURCES,
+  srcs = select({
+    "@bazel_tools//src/conditions:windows": UV_WIN_SOURCES,
+    "@bazel_tools//src/conditions:windows_msvc": UV_WIN_SOURCES,
+    "@bazel_tools//src/conditions:windows_msys": UV_MSYS_SOURCES,
+    "@bazel_tools//src/conditions:darwin": UV_DARWIN_SOURCES,
+    "@bazel_tools//src/conditions:darwin_x86_64": UV_DARWIN_SOURCES,
+    "@bazel_tools//src/conditions:freebsd": UV_BSD_SOURCES,
+    "@bazel_tools//src/conditions:linux_x86_64": UV_LINUX_SOURCES,
+    "@bazel_tools//src/conditions:linux_aarch64": UV_LINUX_SOURCES,
+    "//conditions:default": UV_LINUX_SOURCES,
   }),
-  hdrs = [
-    "src/unix/internal.h",
-    "include/uv.h",
-    "include/uv/darwin.h",
-    "include/uv/errno.h",
-    "include/uv/threadpool.h",
-    "include/uv/tree.h",
-    "include/uv/unix.h",
-    "include/uv/version.h",
-  ],
+  hdrs = select({
+    "@bazel_tools//src/conditions:windows": UV_WIN_HEADERS,
+    "@bazel_tools//src/conditions:windows_msvc": UV_WIN_HEADERS,
+    "@bazel_tools//src/conditions:windows_msys": UV_MSYS_HEADERS,
+    "@bazel_tools//src/conditions:darwin": UV_DARWIN_HEADERS,
+    "@bazel_tools//src/conditions:darwin_x86_64": UV_DARWIN_HEADERS,
+    "@bazel_tools//src/conditions:freebsd": UV_BSD_HEADERS,
+    "@bazel_tools//src/conditions:linux_x86_64": UV_LINUX_HEADERS,
+    "@bazel_tools//src/conditions:linux_aarch64": UV_LINUX_HEADERS,
+    "//conditions:default": UV_LINUX_HEADERS,
+  }),
   includes = ["include", "src"],
   visibility = ["//visibility:public"],
 )
