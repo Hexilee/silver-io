@@ -33,7 +33,7 @@ namespace sio {
     };
     
     template<typename T>
-    Result<T>::Result(): value(T()), status_code(int()) {}
+    Result<T>::Result(): value(unique_ptr<T>(nullptr)), status_code(int()) {}
     
     template<typename T>
     Result<T>::Result(unique_ptr<T> &&value, int status_code)
