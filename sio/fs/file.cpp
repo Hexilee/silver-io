@@ -13,14 +13,16 @@ using std::make_unique;
 auto OpenFileFuture::poll() -> Poll<Result<File>> {
     if (!is_register) {
         auto open_resource = EventLoop->resource<FileReq>();
-        open_resource->once<ErrorEvent>([this](const ErrorEvent &event, FileReq &file) {
+        open_resource->once<ErrorEvent>([this, context = future::ThreadLocalContext](const ErrorEvent &event, FileReq &file) {
+            spdlog::debug("open_resource on ErrorEvent {:s}", event.what());
             queue.enqueue(Result<File>(unique_ptr<File>(nullptr), event.code()));
-            future::ThreadLocalContext->wake();
+            context->wake();
         });
-        open_resource->once<FsEvent<details::UVFsType::OPEN>>([this](const FsEvent<details::UVFsType::OPEN> &,
+        open_resource->once<FsEvent<details::UVFsType::OPEN>>([this, context = future::ThreadLocalContext](const FsEvent<details::UVFsType::OPEN> &event,
         uvw::FileReq &file) {
+            spdlog::debug("open_resource on FsEvent<details::UVFsType::OPEN {:s}", event.path);
             queue.enqueue(Result<File>(make_unique<File>(file), 0));
-            future::ThreadLocalContext->wake();
+            context->wake();
         });
         open_resource->open(path, flags, mode);
         is_register = true;
