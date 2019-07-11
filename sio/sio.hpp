@@ -22,6 +22,7 @@ namespace sio {
         unique_ptr<T> value;
         int status_code;
       public:
+        Result();
         Result(unique_ptr<T> &&value, int status_code);
         Result(const Result &);
         auto operator=(Result &&) noexcept -> Result &;
@@ -30,6 +31,9 @@ namespace sio {
         auto get_status() const -> ErrorEvent;
         auto is_ok() const -> bool;
     };
+    
+    template<typename T>
+    Result<T>::Result(): value(T()), status_code(int()) {}
     
     template<typename T>
     Result<T>::Result(unique_ptr<T> &&value, int status_code)
