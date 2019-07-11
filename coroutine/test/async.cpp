@@ -7,11 +7,12 @@
 using namespace sio::coroutine;
 using namespace sio::future;
 
-auto async_with_counter_future(uint64_t n) {
-    auto async_task = async [=] {
+auto async_with_counter_future(uint64_t &&n) {
+    auto async_task = async [&] {
         for (uint64_t i = 0; i < n; i++) {
-            auto f = CounterFuture(n, n);
-            EXPECT_EQ(n, await std::move(f));
+            auto f = CounterFuture(std::forward<uint64_t>(n), n);
+            EXPECT_EQ(n, await
+            std::move(f));
         }
         return n * n;
     };

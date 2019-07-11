@@ -11,7 +11,7 @@
 using namespace sio::future;
 using namespace sio::coroutine;
 
-TEST(FutureOk, AwaitFutureTest) {
+TEST(FutureOk, AwaitTest) {
     EXPECT_EQ(1, await FutureOk(1));
     EXPECT_EQ("name", await FutureOk((char*)"name"));
     EXPECT_EQ(true, await FutureOk(true));
@@ -41,7 +41,7 @@ auto async_stream() {
     EXPECT_EQ(To - From - result, counter); //pending times = total times - continue times
 }
 
-TEST(RangeStream, AwaitStreamTest) {
+TEST(RangeStream, AwaitTest) {
     async_stream<0, 20, 2>();
     async_stream<1, 20, 2>();
     async_stream<1, 20, 3>();

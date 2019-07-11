@@ -33,7 +33,7 @@ auto rang_stream_to_iter() {
     EXPECT_EQ(To - From - result, counter); //pending times = total times - continue times
 }
 
-TEST(RangeStreamTest, StreamIter) {
+TEST(RangeStream, StreamIterTest) {
     rang_stream_to_iter<0, 20, 2>();
     rang_stream_to_iter<1, 20, 2>();
     rang_stream_to_iter<1, 20, 3>();

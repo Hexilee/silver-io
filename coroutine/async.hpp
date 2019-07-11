@@ -28,7 +28,7 @@ namespace sio::coroutine {
     class Awaiter {
       public:
         template<typename T>
-        auto operator<<(Future<T> &&f) -> T &&;
+        auto operator<<(Future<T> &&f) -> T;
         
         template<typename T>
         auto operator<<(Stream<T> &&s) -> StreamIter<T>;
@@ -41,7 +41,7 @@ namespace sio::coroutine {
     };
     
     template<typename T>
-    auto Awaiter::operator<<(sio::future::Future<T> &&f) -> T && {
+    auto Awaiter::operator<<(sio::future::Future<T> &&f) -> T {
         auto poll_result = f.poll();
         while (poll_result.status() == PollStatus::Pending) {
             sio::coroutine::Coroutine<T>::yield();
