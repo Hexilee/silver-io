@@ -12,8 +12,8 @@ auto main(int argc, char *argv[]) -> int {
     auto loop = Loop::create();
     spdlog::set_level(spdlog::level::debug);
     auto file_resource = loop->resource<FileReq>();
-    file_resource->on<ErrorEvent>([](const ErrorEvent &event, FileReq &file) {
-        spdlog::error("file_resource on ErrorEvent: {:s}", event.what());
+    file_resource->once<ErrorEvent>([=](const ErrorEvent &event, FileReq &file) {
+        spdlog::error("open {0:s} on ErrorEvent: {1:s}", argv[1], event.what());
     });
     file_resource->once<FsEvent<details::UVFsType::OPEN>>([](const FsEvent<details::UVFsType::OPEN> &event,
     uvw::FileReq &file) {
@@ -25,7 +25,13 @@ auto main(int argc, char *argv[]) -> int {
             uvw::FileReq &file) {
                 spdlog::info("file contents: {:s}", event.data.get());
             });
+            file.once<ErrorEvent>([](const ErrorEvent &event, FileReq &file) {
+                spdlog::error("read on ErrorEvent: {:s}", event.what());
+            });
             file.read(0, event.stat.st_size);
+        });
+        file.once<ErrorEvent>([](const ErrorEvent &event, FileReq &file) {
+            spdlog::error("stat on ErrorEvent: {:s}", event.what());
         });
         file.stat();
     });
