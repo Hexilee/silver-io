@@ -11,6 +11,10 @@ An asynchronous IO library which is the easiest to use for cpp. Inspired by Futu
         - [ ] work stealing
         - [x] block_on
         - [ ] spawn
+    - [ ] utils
+        - [ ] mutex
+        - [ ] rwlock
+        - [ ] channel
 - [x] generator (stackful, segmented stack, based on boost::coroutine2)
     - [x] Generator
 - [x] coroutine (based on generator)
@@ -63,10 +67,6 @@ An asynchronous IO library which is the easiest to use for cpp. Inspired by Futu
                 - [ ] event_init
                 - [ ] event_start
             - [ ] custom events 
-            - [ ] utils
-                - [ ] mutex
-                - [ ] rwlock
-                - [ ] channel
 
         
         
