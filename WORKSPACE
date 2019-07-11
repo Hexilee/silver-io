@@ -25,3 +25,10 @@ git_repository(
     remote = "https://github.com/google/googletest.git",
     tag = "release-1.8.1",
 )
+
+new_git_repository(
+    name = "spdlog",
+    build_file = "spdlog.BUILD",
+    remote = "https://github.com/gabime/spdlog.git",
+    tag = "v1.3.1",
+)

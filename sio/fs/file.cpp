@@ -3,6 +3,7 @@
  */
 
 #include "file.hpp"
+#include "spdlog/spdlog.h"
 
 using namespace uvw;
 using namespace sio::fs;
@@ -23,10 +24,13 @@ auto OpenFileFuture::poll() -> Poll<Result<File>> {
         });
         open_resource->open(path, flags, mode);
         is_register = true;
+        spdlog::debug("OpenFileFuture poll register: open {0}", path);
     }
     if (queue.try_dequeue(file_result)) {
+        spdlog::debug("OpenFileFuture poll ready: status is ok {0}", file_result.is_ok());
         return Poll(std::move(file_result));
     } else {
+        spdlog::debug("OpenFileFuture poll pending");
         return Poll<Result<File>>();
     }
 }

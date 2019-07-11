@@ -20,6 +20,7 @@ cc_library(
         "//coroutine:sio_coroutine",
         "@uvw//:uvw",
         "@concurrentqueue//:concurrentqueue",
+        "@spdlog//:spdlog",
     ],
     copts = [
         "-std=c++17"
