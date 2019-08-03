@@ -33,6 +33,7 @@ namespace sio::executor {
         auto loop_thread = init_event_loop();
         auto result = main_task.wait();
         EventLoop->stop();
+        spdlog::debug("event loop stop");
         loop_thread->join();
         return std::move(result);
     }

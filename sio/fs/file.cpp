@@ -20,7 +20,7 @@ auto OpenFileFuture::poll() -> Poll<Result<File>> {
         });
         open_resource->once<FsEvent<details::UVFsType::OPEN>>([this, context = future::ThreadLocalContext](const FsEvent<details::UVFsType::OPEN> &event,
         uvw::FileReq &file) {
-            spdlog::debug("open_resource on FsEvent<details::UVFsType::OPEN {:s}", event.path);
+            spdlog::debug("open_resource on FsEvent<details::UVFsType::OPEN> {:s}", event.path);
             queue.enqueue(Result<File>(make_unique<File>(file), 0));
             context->wake();
         });
@@ -28,8 +28,8 @@ auto OpenFileFuture::poll() -> Poll<Result<File>> {
         is_register = true;
         spdlog::debug("OpenFileFuture poll register: open {0}", path);
     }
-    if (queue.try_dequeue(file_result)) {
-        spdlog::debug("OpenFileFuture poll ready: status is ok {0}", file_result.is_ok());
+    if (queue.try_dequeue(file_result) && file_result.is_ok()) {
+        spdlog::debug("OpenFileFuture poll ready");
         return Poll(std::move(file_result));
     } else {
         spdlog::debug("OpenFileFuture poll pending");
